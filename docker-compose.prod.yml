@@ -1,0 +1,10 @@
+# deploy using the command
+# docker compose -f docker-compose.yml -f docker-compose.prod.yml up
+
+services:
+
+  react-ui:
+    build: 
+      context: .
+    ports:
+      - "80:80"
