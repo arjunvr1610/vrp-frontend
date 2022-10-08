@@ -1,6 +1,6 @@
 services:
 
-  react-ui:
+  react:
     image: node:16-alpine
     working_dir: /opt/react_app
     command: npm start

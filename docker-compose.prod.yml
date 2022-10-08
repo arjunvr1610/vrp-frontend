@@ -3,7 +3,7 @@
 
 services:
 
-  react-ui:
+  react:
     build: 
       context: .
     ports:
