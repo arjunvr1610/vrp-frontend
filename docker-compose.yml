@@ -1,3 +1,13 @@
 version: '3.8'
 
 name: vrp-frontend
+
+services:
+  react:
+    networks:
+      - frontend_net
+
+networks:
+  frontend_net:
+    name: frontend_net
+    driver: bridge
