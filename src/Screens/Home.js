@@ -12,13 +12,13 @@ const Home = () => {
   return (
     <Box component="main" sx={{ flexGrow: 1, p: 3, bgcolor: '#F4F6F6' }}>
       <Grid container spacing={2}>
-        <Grid item xs={12} xl={2}>
+        <Grid item xs={12}>
           <TrackingBar />
         </Grid>
-        <Grid item xs={3} xl={10} >
+        <Grid item xs={12} sm={3}>
           <Accords />
         </Grid>
-        <Grid item xs={9} xl={10}>
+        <Grid item xs={12} sm={9}>
           <Card style={{ height: 450, overflow: 'auto' }}>
             <CardContent>
               <Map/>

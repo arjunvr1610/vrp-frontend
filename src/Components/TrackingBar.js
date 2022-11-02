@@ -7,8 +7,8 @@ import Typography from '@mui/material/Typography';
 const TrackingBar = () => {
     return (
         <Card>
-            <CardContent>
-                <Grid container paddingX={6}>
+            <CardContent style={{overflowX: 'auto'}}>
+                <Grid container paddingX={2} style={{ minWidth: '40rem' }}>
                     <Grid item xs={3} textAlign='center'>
                         <Typography variant='h4'>50km</Typography>
                         <Typography fontSize={13}>Total Distance</Typography>
