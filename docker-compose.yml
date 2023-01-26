@@ -1,7 +1,5 @@
 version: '3.8'
 
-name: vrp-frontend
-
 services:
   react:
     networks:
@@ -10,4 +8,5 @@ services:
 networks:
   frontend_net:
     name: frontend_net
-    driver: bridge
+    driver: overlay
+    attachable: true
