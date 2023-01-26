@@ -12,10 +12,15 @@ import UploadFileIcon from '@mui/icons-material/UploadFile';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
+import { useDispatch } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import actionCreators from '../Store/index';
 
 export default function Accords() {
     const [expanded, setExpanded] = useState(false);
     const [file, setFile] = useState(null);
+    const dispatch = useDispatch();
+    const { uploadFile } = bindActionCreators(actionCreators, dispatch);
 
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
@@ -31,6 +36,7 @@ export default function Accords() {
         // e.preventDefault()
         // handleChange('panel4')
         console.log(file)
+        uploadFile(file)
     }
 
     return (
