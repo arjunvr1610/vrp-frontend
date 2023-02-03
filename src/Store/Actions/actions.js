@@ -6,3 +6,12 @@ export const uploadFile = (file) => {
         })
     }
 }
+
+export const storeRoutes = (route) => {
+    return (dispatch) => {
+        dispatch({
+            type: 'STORE_ROUTES',
+            payload: route
+        })
+    }
+}

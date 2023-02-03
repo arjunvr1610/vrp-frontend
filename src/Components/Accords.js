@@ -12,7 +12,7 @@ import UploadFileIcon from '@mui/icons-material/UploadFile';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import actionCreators from '../Store/index';
 
@@ -21,6 +21,7 @@ export default function Accords() {
     const [file, setFile] = useState(null);
     const dispatch = useDispatch();
     const { uploadFile } = bindActionCreators(actionCreators, dispatch);
+    const mapRoutes = useSelector(state => state.routes.mapRoutes);
 
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
@@ -38,6 +39,16 @@ export default function Accords() {
         console.log(file)
         uploadFile(file)
     }
+
+    const colors = [
+        "#C70039 ", 
+        "#19AF3F", 
+        "#0A517F", 
+        "#7B0680", 
+        "#F96AE3",
+        "#EC177E",
+        "#FFC300" 
+    ]
 
     return (
         <div>
@@ -107,13 +118,9 @@ export default function Accords() {
                     <Card style={{ maxHeight: 450, overflow: 'auto' }}>
                         <CardContent>
                             <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-                                <ListMaterial Tour={'Tour1'} vehicle={'1298'} cost={'98'} />
-                                <ListMaterial Tour={'Tour2'} vehicle={'1298'} cost={'98'} />
-                                <ListMaterial Tour={'Tour3'} vehicle={'1298'} cost={'98'} />
-                                <ListMaterial Tour={'Tour4'} vehicle={'1298'} cost={'98'} />
-                                <ListMaterial Tour={'Tour5'} vehicle={'1298'} cost={'98'} />
-                                <ListMaterial Tour={'Tour6'} vehicle={'1298'} cost={'98'} />
-                                <ListMaterial Tour={'Tour7'} vehicle={'1298'} cost={'98'} />
+                                {
+                                    mapRoutes.map((route, index) => <ListMaterial Tour={`Tour ${index.toString()}`} vehicle={'1298'} cost={'98'} color={colors[index]}/>)
+                                }
                             </List>
                         </CardContent>
                     </Card>

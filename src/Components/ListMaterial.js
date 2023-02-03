@@ -5,19 +5,11 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
 const ListMaterial = (props) => {
-    const {Tour, vehicle, cost} = props
-    const  generateRandomColor = () => {
-        let maxVal = 0xFFFFFF; // 16777215
-        let randomNumber = Math.random() * maxVal; 
-        randomNumber = Math.floor(randomNumber);
-        randomNumber = randomNumber.toString(16);
-        let randColor = randomNumber.padStart(6, 0);   
-        return `#${randColor.toUpperCase()}`
-    }
+    const {Tour, vehicle, cost, color} = props
     
     const details = (
         <div>
-            <Typography variant="h6" marginTop={2} color={generateRandomColor()}>{Tour}</Typography>
+            <Typography variant="h6" marginTop={2} color={color}>{Tour}</Typography>
             <Typography>Vehicle: {vehicle}</Typography>
             <Typography marginBottom={2}>Cost: {cost}</Typography>
         </div>
@@ -26,7 +18,7 @@ const ListMaterial = (props) => {
         <>
             <FormControlLabel
                 control={
-                    <Checkbox/>
+                    <Checkbox />
                 }
                 label={details}
             />

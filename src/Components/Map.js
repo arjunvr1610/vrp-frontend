@@ -1,64 +1,47 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import {
-  GoogleMap,
   useLoadScript,
-  MarkerF,
-  DirectionsRenderer,
-  Circle,
-  MarkerClusterer
 } from '@react-google-maps/api';
 
-const containerStyle = {
-  width: '100%',
-  height: '410px'
-};
+import LoadMap from './LoadMap';
+import locs from '../Output/locs';
+import { useDispatch } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import actionCreators from '../Store/index';
 
-const generateNodes = (position) => {
-  const nodes = []
-  for (let i = 0; i < 10; i++) {
-    const direction = Math.random() < 0.5 ? -2 : 2;
-    nodes.push({
-      pos: {
-        lat: position.lat + Math.random() / direction,
-        lng: position.lng - Math.random() / direction
-      },
-      label: i.toString()
-    })
+const Map = (props) => { 
+  const dispatch = useDispatch();
+  const { storeRoutes } = bindActionCreators(actionCreators, dispatch);
+
+  const calcRoutes = async(center) => {
+    const directionsService = new window.google.maps.DirectionsService();
+    await locs.forEach(route => {
+        directionsService.route(
+        {
+        origin: center,
+        destination: center,
+        travelMode: window.google.maps.TravelMode.DRIVING,
+        waypoints: route
+        },
+        (result, status) => {
+        if (status === window.google.maps.DirectionsStatus.OK) {
+          storeRoutes(result);
+        } else {
+          console.error(`error fetching directions ${result}`);
+        }
+        }
+    )})
   }
-  return nodes;
-}
-
-const LoadMap = () => {
-  const center = useMemo(() => ({ lat: 18.59, lng: 73.7 }), []);
-  const options = useMemo(() => ({
-    disableDefaultUI: true,
-    clickableIcons: false
-  }), []);
-  const image = process.env.PUBLIC_URL + '/warehouse.png'
-
-  const nodes = useMemo(() => generateNodes(center), [center]);
-
-  return (
-    <GoogleMap
-      mapContainerStyle={containerStyle}
-      center={center}
-      options={options}
-      zoom={10}
-    >
-      <MarkerF
-        position={center}
-        icon={image}
-      />
-      {nodes.map((node) => <MarkerF label={node.label} key={node.pos.lat} position={node.pos} />)}
-    </GoogleMap>
-  );
-}
-
-const Map = () => {
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_MAP_KEY
   });
+
+  useEffect(() => {
+    // setDirections([])
+    calcRoutes({ lat: 18.59, lng: 73.7 });
+  }, []);
+  
   if (!isLoaded) return <div>Loading...</div>
   return <LoadMap />
 }
