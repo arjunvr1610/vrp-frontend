@@ -1,7 +1,6 @@
 const initialState = {
     mapRoutes: [],
-    nodes: [],
-    colors:[]
+    selectedRoute: null,
 }
 
 const reducer = (state = initialState, action) => {
@@ -10,10 +9,25 @@ const reducer = (state = initialState, action) => {
         const payload = action.payload;
         return ({
             mapRoutes: [...state.mapRoutes, payload],
-            nodes: [...state.nodes],
-            colors: [...state.colors]
+            selectedRoute: null,
         });
-    } else {
+    } 
+
+    else if (action.type === 'SELECT_ROUTE') {
+        return ({
+            mapRoutes: [...state.mapRoutes],
+            selectedRoute: action.payload,
+        });
+    }
+
+    else if (action.type === 'EMPTY_ROUTES') {
+        return ({
+            mapRoutes: [],
+            selectedRoute: state.selectedRoute,
+        });
+    }
+
+    else {
         return state;
     }
 }
