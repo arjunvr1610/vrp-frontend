@@ -11,6 +11,22 @@ const reducer = (state = initialState, action) => {
         });
     } 
 
+    else if (action.type === 'ADD_NODES') {
+        const payload = action.payload;
+        console.log(payload);
+        return ({
+            nodes: [...state.nodes, payload],
+        });
+    } 
+
+    else if (action.type === 'REMOVE_NODES') {
+        console.log("nodes payload = ", action.payload)
+        // const payload = action.payload;
+        // return ({
+        //     nodes: payload,
+        // });
+    }
+
     else {
         return state;
     }

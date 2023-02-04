@@ -87,3 +87,22 @@ export const deleteSolution = (solutionData) => {
         })
     }
 }
+
+// modal actions
+export const openAddLocModal = () => {
+    return (dispatch) => {
+        dispatch({
+            type: 'OPEN_ADD_LOC',
+            payload: null
+        })
+    }
+}
+
+export const closeAddLocModal = () => {
+    return (dispatch) => {
+        dispatch({
+            type: 'CLOSE_ADD_LOC',
+            payload: null
+        })
+    }
+}

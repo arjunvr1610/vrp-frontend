@@ -11,6 +11,8 @@ import ListMaterial from './ListMaterial';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
+import AddLocationIcon from '@mui/icons-material/AddLocation';
+import WrongLocationIcon from '@mui/icons-material/WrongLocation';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
@@ -23,7 +25,12 @@ export default function Accords() {
     const [expanded, setExpanded] = useState(false);
     const [file, setFile] = useState(null);
     const dispatch = useDispatch();
-    const { uploadFile, storeNodes } = bindActionCreators(actionCreators, dispatch);
+    const {
+        uploadFile,
+        storeNodes,
+        openAddLocModal
+    } = bindActionCreators(actionCreators, dispatch);
+
     const { mapRoutes } = useSelector(state => state.routes);
     const locationsData = useSelector(state => state.nodes.nodes);
 
@@ -101,7 +108,31 @@ export default function Accords() {
                 >
                     <Typography sx={{ width: '33%', flexShrink: 0 }}>Locations</Typography>
                 </AccordionSummary>
-                <AccordionDetails>
+                <AccordionDetails style={{"display": "flex", "flex-direction": "column"}}>
+                    <div style={{
+                        "justify-content": "space-between",
+                        "flex-direction": "row",
+                        "display": "flex"
+                    }}
+                    >
+                        <IconButton
+                            aria-label='remove-location'
+                            size="large"
+                            edge="start"
+                            sx={{ mr: 2 }}
+                        >
+                            <WrongLocationIcon sx={{ fontSize: 50 }} />
+                        </IconButton>
+                        <IconButton
+                            aria-label='add-new-location'
+                            size="large"
+                            edge="end"
+                            sx={{ mr: 2 }}
+                            onClick={() => openAddLocModal()}
+                        >
+                            <AddLocationIcon sx={{ fontSize: 50 }} />
+                        </IconButton>
+                    </div>
                     <Card style={{ maxHeight: 450, overflow: 'auto' }}>
                         <CardContent>
                             <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
@@ -110,11 +141,11 @@ export default function Accords() {
                                         <ListItemButton
                                             alignItems='flex-start'
                                             divider={true}
-                                            onClick={() => {}}
+                                            onClick={() => { }}
                                         >
-                                            <ListItemText 
-                                                primary={`Node ${loc.label}`} 
-                                                secondary={"demand = 20"} 
+                                            <ListItemText
+                                                primary={`Node ${loc.label}`}
+                                                secondary={"demand = 20"}
                                             />
                                         </ListItemButton>
                                     ))
@@ -122,6 +153,7 @@ export default function Accords() {
                             </List>
                         </CardContent>
                     </Card>
+                    <Button style={{ "margin": "20px"}} variant='contained' onClick={() => { }}>Submit</Button>
                 </AccordionDetails>
             </Accordion>
             <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
@@ -171,6 +203,6 @@ export default function Accords() {
                     </Card>
                 </AccordionDetails>
             </Accordion>
-        </div>
+        </div >
     );
 }
