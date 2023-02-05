@@ -28,7 +28,9 @@ export default function Accords() {
     const {
         uploadFile,
         storeNodes,
-        openAddLocModal
+        openAddLocModal,
+        openRemoveLocModal,
+        submitNodes
     } = bindActionCreators(actionCreators, dispatch);
 
     const { mapRoutes } = useSelector(state => state.routes);
@@ -120,6 +122,7 @@ export default function Accords() {
                             size="large"
                             edge="start"
                             sx={{ mr: 2 }}
+                            onClick={() => openRemoveLocModal()}
                         >
                             <WrongLocationIcon sx={{ fontSize: 50 }} />
                         </IconButton>
@@ -153,7 +156,7 @@ export default function Accords() {
                             </List>
                         </CardContent>
                     </Card>
-                    <Button style={{ "margin": "20px"}} variant='contained' onClick={() => { }}>Submit</Button>
+                    <Button style={{ "margin": "20px"}} variant='contained' onClick={() => { submitNodes(locationsData) }}>Submit</Button>
                 </AccordionDetails>
             </Accordion>
             <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>

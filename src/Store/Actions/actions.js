@@ -61,6 +61,15 @@ export const removeNodes = (locsData) => {
     }
 }
 
+export const submitNodes = (locsData) => {
+    return (dispatch) => {
+        dispatch({
+            type: 'SUBMIT_NODES',
+            payload: locsData
+        })
+    }
+}
+
 export const saveSolution = (solutionData) => {
     return (dispatch) => {
         dispatch({
@@ -102,6 +111,24 @@ export const closeAddLocModal = () => {
     return (dispatch) => {
         dispatch({
             type: 'CLOSE_ADD_LOC',
+            payload: null
+        })
+    }
+}
+
+export const openRemoveLocModal = () => {
+    return (dispatch) => {
+        dispatch({
+            type: 'OPEN_DEL_LOC',
+            payload: null
+        })
+    }
+}
+
+export const closeRemoveLocModal = () => {
+    return (dispatch) => {
+        dispatch({
+            type: 'CLOSE_DEL_LOC',
             payload: null
         })
     }

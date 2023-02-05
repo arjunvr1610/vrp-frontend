@@ -7,12 +7,14 @@ import Map from '../Components/Map';
 import Accords from '../Components/Accords.js'
 import TrackingBar from '../Components/TrackingBar';
 import AddLocModal from '../Components/AddLocModal';
+import RemoveLocModal from '../Components/RemoveLocModal';
 
 const Home = () => {
 
   return (
     <Box component="main" sx={{ flexGrow: 1, p: 3, bgcolor: '#F4F6F6' }}>
       <AddLocModal />
+      <RemoveLocModal />
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <TrackingBar />

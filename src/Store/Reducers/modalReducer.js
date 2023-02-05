@@ -11,10 +11,17 @@ const reducer = (state = initialState, action) => {
         })
     }
 
-    else if (action.type === 'CLOSE_ADD_LOC') {
+    else if (action.type === 'CLOSE_ADD_LOC' || action.type === 'CLOSE_DEL_LOC') {
         return ({
             openAddLoc: false,
             openRemoveLoc: false
+        })
+    }
+
+    else if (action.type === 'OPEN_DEL_LOC') {
+        return ({
+            openAddLoc: false,
+            openRemoveLoc: true
         })
     }
 
