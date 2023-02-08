@@ -20,8 +20,8 @@ const Map = (props) => {
   const { selectedRoute, mapRoutes } = useSelector(state => state.routes);
   const locationData  = useSelector(state => state.nodes.nodes);
 
-  console.log("mapRoutes - ", mapRoutes);
-  console.log("selectedRoutes - ", selectedRoute);
+  // console.log("mapRoutes - ", mapRoutes);
+  // console.log("selectedRoutes - ", selectedRoute);
   const colors = [
     "#C70039 ",
     "#19AF3F",
@@ -33,9 +33,10 @@ const Map = (props) => {
   ]
 
   const calcRoutes = async (center) => {
+    console.log('HELLOW WORLD') 
     const directionsService = new window.google.maps.DirectionsService();
-    await locs.forEach((route, index) => {
-      directionsService.route(
+    return Promise.all(locs.map(async (route, index) => {
+      return await directionsService.route(
         {
           origin: center,
           destination: center,
@@ -50,15 +51,14 @@ const Map = (props) => {
           }
         }
       )
-    })
+    }))
   }
 
   useEffect(() => {
     emptyRoutes();
-    calcRoutes({ lat: 18.59, lng: 73.7 });
+    // console.log('Use Effect ran')
+    calcRoutes({ lat: 18.59, lng: 73.7 }); 
   }, []);
-
-  // useEffect(() => {}, [selectedRoute])
 
   const containerStyle = {
     width: '100%',
@@ -104,6 +104,7 @@ const Map = (props) => {
             },
             suppressMarkers: true,
           }}
+          key={index} 
       />)} 
 
     </GoogleMap>

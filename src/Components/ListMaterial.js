@@ -19,15 +19,13 @@ const ListMaterial = (props) => {
     }
 
     const secText = (
-        <div>
-            <Typography>Vehicle: {vehicle}</Typography>
-            <Typography marginBottom={2}>Cost: {cost}</Typography>
-        </div>
+        <>
+        <span style={{display: 'block'}}>Vehicle: ${vehicle}</span>
+        <span style={{display: 'block'}}>Cost: ${cost}</span>
+        </>
     )
     const primText = (
-        <div>
-            <Typography variant="h6" marginTop={2} color={color}>{`Tour ${Tour}`}</Typography>
-        </div>
+        <Typography variant="h6" marginTop={2} color={color}>{`Tour ${Tour}`}</Typography>
     )
     return (
         <>

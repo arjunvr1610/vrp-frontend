@@ -110,10 +110,10 @@ export default function Accords() {
                 >
                     <Typography sx={{ width: '33%', flexShrink: 0 }}>Locations</Typography>
                 </AccordionSummary>
-                <AccordionDetails style={{"display": "flex", "flex-direction": "column"}}>
+                <AccordionDetails style={{"display": "flex", "flexDirection": "column"}}>
                     <div style={{
-                        "justify-content": "space-between",
-                        "flex-direction": "row",
+                        "justifyContent": "space-between",
+                        "flexDirection": "row",
                         "display": "flex"
                     }}
                     >
@@ -145,6 +145,7 @@ export default function Accords() {
                                             alignItems='flex-start'
                                             divider={true}
                                             onClick={() => { }}
+                                            key={index}
                                         >
                                             <ListItemText
                                                 primary={`Node ${loc.label}`}
@@ -178,6 +179,7 @@ export default function Accords() {
                                             vehicle={'1298'}
                                             cost={'98'}
                                             color={route.clr}
+                                            key={index}
                                         />
                                     )
                                 }

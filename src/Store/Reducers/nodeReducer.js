@@ -10,7 +10,7 @@ const reducer = (state = initialState, action) => {
     }
 
     if (action.type === 'STORE_NODES') {
-        console.log("nodes payload = ", action.payload)
+        // console.log("nodes payload = ", action.payload)
         const payload = action.payload;
         return ({
             nodes: payload,
