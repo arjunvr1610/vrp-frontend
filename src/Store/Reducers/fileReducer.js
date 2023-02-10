@@ -1,22 +1,37 @@
 import axios from 'axios';
 
-const reducer = async(state = null, action) => {
+const initialState = {
+    fileData: {},
+    fileUploadStatus: false
+}
+
+const reducer = (state = initialState, action) => {
     if (action.type === 'UPLOAD') {
         console.log(action.payload)
-        let file = new Uint8Array(await action.payload.arrayBuffer())
-        console.log('file = ', file);
         axios({
             url: '/some/uri',
             method: 'POST',
             headers: {
                 authorization: 'your token'
             },
-            data: file
+            data: action.payload
         }).then((res) => {
-            // response
+            // response handling
+            // return ({
+            //     fileData: {},
+            //     fileUploadStatus: true
+            // });
         }, (err) => {
             console.log(err)
+            // return ({
+            //     fileData: {},
+            //     fileUploadStatus: true
+            // });
         })
+        return ({
+            fileData: {},
+            fileUploadStatus: true
+        });
     }
     else {
         return state

@@ -8,8 +8,11 @@ import Accords from '../Components/Accords.js'
 import TrackingBar from '../Components/TrackingBar';
 import AddLocModal from '../Components/AddLocModal';
 import RemoveLocModal from '../Components/RemoveLocModal';
+import { useSelector } from 'react-redux';
 
 const Home = () => {
+  const {fileUploadStatus}  = useSelector(state => state.file);
+  console.log('status - ', fileUploadStatus)
 
   return (
     <Box component="main" sx={{ flexGrow: 1, p: 3, bgcolor: '#F4F6F6' }}>
@@ -25,7 +28,7 @@ const Home = () => {
         <Grid item xs={12} sm={9}>
           <Card style={{ height: 450, overflow: 'auto' }}>
             <CardContent>
-              <Map/>
+              {fileUploadStatus === true ? <Map/> : 'Upload a file'}
             </CardContent>
           </Card>
         </Grid>

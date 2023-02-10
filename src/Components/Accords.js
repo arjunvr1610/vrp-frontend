@@ -30,27 +30,57 @@ export default function Accords() {
         storeNodes,
         openAddLocModal,
         openRemoveLocModal,
-        submitNodes
+        submitNodes,
+        storeRoutes, 
+        emptyRoutes
     } = bindActionCreators(actionCreators, dispatch);
 
     const { mapRoutes } = useSelector(state => state.routes);
     const locationsData = useSelector(state => state.nodes.nodes);
+
 
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
 
     const onInputChange = (e) => {
-        console.log('working..')
         setFile(e.target.files[0]);
         console.log(e.target.files[0])
     }
 
-    const onSubmitFile = (e) => {
-        // e.preventDefault()
-        // handleChange('panel4')
-        console.log(file)
-        uploadFile(file)
+
+    const onSubmitFile = async (e) => {
+        e.preventDefault()
+        const parsed = new Uint8Array(await file.arrayBuffer())
+        uploadFile(parsed)
+    }
+
+    const calcRoutes = async (center) => {
+        console.log('HELLOW WORLD')
+        const directionsService = new window.google.maps.DirectionsService();
+        return Promise.all(locs.map(async (route, index) => {
+            return await directionsService.route(
+                {
+                    origin: center,
+                    destination: center,
+                    travelMode: window.google.maps.TravelMode.DRIVING,
+                    waypoints: route
+                },
+                (result, status) => {
+                    if (status === window.google.maps.DirectionsStatus.OK) {
+                        storeRoutes({ dir: result, clr: colors[index] });
+                    } else {
+                        console.error(`error fetching directions ${result}`);
+                    }
+                }
+            )
+        }))
+    }
+
+    const onSubmitNodes = () => {
+        emptyRoutes();
+        calcRoutes({ lat: 18.59, lng: 73.7 })
+        submitNodes(locationsData)
     }
 
     const colors = [
@@ -110,7 +140,7 @@ export default function Accords() {
                 >
                     <Typography sx={{ width: '33%', flexShrink: 0 }}>Locations</Typography>
                 </AccordionSummary>
-                <AccordionDetails style={{"display": "flex", "flexDirection": "column"}}>
+                <AccordionDetails style={{ "display": "flex", "flexDirection": "column" }}>
                     <div style={{
                         "justifyContent": "space-between",
                         "flexDirection": "row",
@@ -157,7 +187,7 @@ export default function Accords() {
                             </List>
                         </CardContent>
                     </Card>
-                    <Button style={{ "margin": "20px"}} variant='contained' onClick={() => { submitNodes(locationsData) }}>Submit</Button>
+                    <Button style={{ "margin": "20px" }} variant='contained' onClick={() => { onSubmitNodes() }}>Submit</Button>
                 </AccordionDetails>
             </Accordion>
             <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
