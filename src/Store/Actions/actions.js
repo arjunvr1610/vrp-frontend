@@ -1,3 +1,4 @@
+// file
 export const uploadFile = (file) => {
     return (dispatch) => {
         dispatch({
@@ -7,6 +8,7 @@ export const uploadFile = (file) => {
     }
 }
 
+// routes
 export const storeRoutes = (routeData) => {
     return (dispatch) => {
         dispatch({
@@ -34,6 +36,7 @@ export const emptyRoutes = () => {
     }
 }
 
+// nodes
 export const storeNodes = (locsData) => {
     return (dispatch) => {
         dispatch({
@@ -66,6 +69,16 @@ export const submitNodes = (locsData) => {
         dispatch({
             type: 'SUBMIT_NODES',
             payload: locsData
+        })
+    }
+}
+
+// solution
+export const storeSolution = (solutionData) => {
+    return (dispatch) => {
+        dispatch({
+            type: 'STORE_SOL',
+            payload: solutionData
         })
     }
 }
