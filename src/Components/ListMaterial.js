@@ -13,8 +13,6 @@ const ListMaterial = (props) => {
     const mapRoutes = useSelector(state => state.routes.mapRoutes);
 
     const handleClick = () => {
-        console.log("checked = ", Tour)
-        console.log("checked route = ", mapRoutes[Tour])
         selectRoute(mapRoutes[Tour])
     }
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import actionCreators from '../Store/index';
 import locs from '../Output/locs';
+import result from '../Output/result';
 
 export default function Accords() {
     const [expanded, setExpanded] = useState(false);
@@ -31,7 +32,7 @@ export default function Accords() {
         openAddLocModal,
         openRemoveLocModal,
         submitNodes,
-        storeRoutes, 
+        storeRoutes,
         emptyRoutes
     } = bindActionCreators(actionCreators, dispatch);
 
@@ -45,7 +46,6 @@ export default function Accords() {
 
     const onInputChange = (e) => {
         setFile(e.target.files[0]);
-        console.log(e.target.files[0])
     }
 
 
@@ -53,18 +53,33 @@ export default function Accords() {
         e.preventDefault()
         const parsed = new Uint8Array(await file.arrayBuffer())
         uploadFile(parsed)
+        storeNodes(locs);
     }
 
     const calcRoutes = async (center) => {
-        console.log('HELLOW WORLD')
         const directionsService = new window.google.maps.DirectionsService();
-        return Promise.all(locs.map(async (route, index) => {
+        let tours = [];
+        result[0].solution.routes.forEach(route => {
+            let temp = [];
+            for (let item of route.tour) {
+                if (item !== result[0].depotNode) {
+                    temp.push({
+                        location: {
+                            lat: result[0].nodeData[item].latitude,
+                            lng: result[0].nodeData[item].longitude
+                        }
+                    })
+                }
+            }
+            tours.push(temp)
+        })
+        return Promise.all(tours.map(async (tour, index) => {
             return await directionsService.route(
                 {
                     origin: center,
                     destination: center,
                     travelMode: window.google.maps.TravelMode.DRIVING,
-                    waypoints: route
+                    waypoints: tour
                 },
                 (result, status) => {
                     if (status === window.google.maps.DirectionsStatus.OK) {
@@ -79,7 +94,7 @@ export default function Accords() {
 
     const onSubmitNodes = () => {
         emptyRoutes();
-        calcRoutes({ lat: 18.59, lng: 73.7 })
+        calcRoutes({ lat: locationsData[0].latitude, lng: locationsData[0].longitude })
         submitNodes(locationsData)
     }
 
@@ -92,22 +107,6 @@ export default function Accords() {
         "#EC177E",
         "#FFC300"
     ]
-
-    const getNodesRes = () => {
-
-        let label = 0;
-        let nodes = [];
-        for (let index = 0; index < locs.length; index++) {
-            const arr = locs[index];
-            for (let j = 0; j < arr.length; j++) {
-                label++;
-                nodes.push({ pos: arr[j], label: label.toString() })
-            }
-        }
-        storeNodes(nodes)
-    }
-
-    useEffect(() => { getNodesRes() }, []);
 
     return (
         <div>
@@ -175,11 +174,11 @@ export default function Accords() {
                                             alignItems='flex-start'
                                             divider={true}
                                             onClick={() => { }}
-                                            key={index}
+                                            key={loc.latitude}
                                         >
                                             <ListItemText
-                                                primary={`Node ${loc.label}`}
-                                                secondary={"demand = 20"}
+                                                primary={`Node ${loc.node}`}
+                                                secondary={`Demand: ${loc.demand}`}
                                             />
                                         </ListItemButton>
                                     ))

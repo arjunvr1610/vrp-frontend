@@ -9,24 +9,18 @@ const initialState = {
 const reducer = (state = initialState, action) => {
 
     if (action.type === 'STORE_SOL') {
-        console.log(action.payload)
-        const payload = action.payload;
         return state
     }
 
     else if (action.type === 'SAVE_SOL') {
-        const payload = action.payload;
         return state
     }
 
     else if (action.type === 'FETCH_SOL') {
-        const payload = action.payload;
         return state
     }
 
     else if (action.type === 'DELETE_SOL') {
-        const payload = action.payload;
-        console.log(payload);
         return state;
     }
 

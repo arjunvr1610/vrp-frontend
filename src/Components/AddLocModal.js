@@ -24,8 +24,11 @@ const AddLocModal = () => {
   const handleAdd = () => {
     const newNodeLabel = nodesData.length + 1;
     const nodeValue = {
-        pos: {location: {lat: parseFloat(ltd), lng: parseFloat(lng)}}, 
-        label: newNodeLabel.toString()
+        node: newNodeLabel,
+        latitude: parseFloat(ltd), 
+        longitude: parseFloat(lng),
+        demand: demand,
+        priority: 0
     }
     addNodes(nodeValue);
     handleClose();

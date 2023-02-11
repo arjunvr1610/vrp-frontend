@@ -7,19 +7,22 @@ import {
   // Circle,
   // MarkerClusterer
 } from '@react-google-maps/api';
+import locs from '../Output/locs';
+import result from '../Output/result';
 
 import { useSelector } from 'react-redux';
 
 
 const Map = (props) => {
   const { selectedRoute, mapRoutes } = useSelector(state => state.routes);
-  const locationData  = useSelector(state => state.nodes.nodes);
+  let locationData  = useSelector(state => state.nodes.nodes);
+  locationData = locationData.filter(loc => loc.node !== result[0].depotNode)
 
   const containerStyle = {
     width: '100%',
     height: '410px'
   }
-  const center = useMemo(() => ({ lat: 18.59, lng: 73.7 }), []);
+  const center = useMemo(() => ({ lat: locs[0].latitude, lng: locs[0].longitude }), []);
   const options = useMemo(() => ({
     disableDefaultUI: false,
     clickableIcons: false
@@ -44,10 +47,10 @@ const Map = (props) => {
       />
 
       {
-        locationData.map(node => <MarkerF
-          key={node.pos.location.lat}
-          position={node.pos.location}
-          label={node.label}
+        locationData.map(loc => <MarkerF
+          key={loc.latitude}
+          position={{lat: loc.latitude, lng: loc.longitude}}
+          label={loc.node.toString()}
         />)
       }
 

@@ -12,7 +12,6 @@ import { useSelector } from 'react-redux';
 
 const Home = () => {
   const {fileUploadStatus}  = useSelector(state => state.file);
-  console.log('status - ', fileUploadStatus)
 
   return (
     <Box component="main" sx={{ flexGrow: 1, p: 3, bgcolor: '#F4F6F6' }}>

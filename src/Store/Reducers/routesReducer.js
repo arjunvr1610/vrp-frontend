@@ -5,7 +5,6 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     if (action.type === 'STORE_ROUTES') {
-        console.log("payload = ", action.payload)
         const payload = action.payload;
         return ({
             mapRoutes: [...state.mapRoutes, payload],

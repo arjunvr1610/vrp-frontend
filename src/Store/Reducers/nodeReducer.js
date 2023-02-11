@@ -10,7 +10,6 @@ const reducer = (state = initialState, action) => {
     }
 
     if (action.type === 'STORE_NODES') {
-        // console.log("nodes payload = ", action.payload)
         const payload = action.payload;
         return ({
             nodes: payload,
@@ -33,8 +32,6 @@ const reducer = (state = initialState, action) => {
     }
 
     else if (action.type === 'SUBMIT_NODES') {
-        const payload = action.payload;
-        console.log(payload);
         return state;
     }
 

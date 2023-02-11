@@ -48,13 +48,13 @@ const RemoveLocModal = (props) => {
             <DialogTitle>Remove Nodes</DialogTitle>
             <DialogContent dividers>
                 <FormGroup >
-                    {nodes.map((node) => (
+                    {nodes.map((loc) => (
                         <FormControlLabel
-                            value={node}
-                            key={node.pos.location.lat}
+                            value={loc}
+                            key={loc.latitude}
                             control={<Checkbox />}
-                            label={`Node ${node.label}`}
-                            onChange={(e)=>handleChange(e, node)}
+                            label={`Node ${loc.node}`}
+                            onChange={(e)=>handleChange(e, loc)}
                         />
                     ))}
                 </FormGroup>

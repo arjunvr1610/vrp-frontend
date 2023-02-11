@@ -7,7 +7,6 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     if (action.type === 'UPLOAD') {
-        console.log(action.payload)
         axios({
             url: '/some/uri',
             method: 'POST',
