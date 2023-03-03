@@ -52,7 +52,7 @@ export default function Accords() {
     const onSubmitFile = async (e) => {
         e.preventDefault()
         const parsed = new Uint8Array(await file.arrayBuffer())
-        uploadFile(parsed)
+        await uploadFile(parsed)
         storeNodes(locs);
     }
 
