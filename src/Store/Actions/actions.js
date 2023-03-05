@@ -5,6 +5,7 @@ let URL_ = window.location.origin.replace(
   /([a-zA-Z0-9-:/]*-)(\d{2,4})(\.direct\.labs\.play-with-docker\.com)/g,
   "$13000$3"
 );
+URL_ = URL_+"/graphql"
 
 export const uploadFile = (file) => {
   return async (dispatch) => {
