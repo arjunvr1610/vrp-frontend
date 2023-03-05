@@ -2,14 +2,14 @@ import axios from "axios";
 
 const initialState = {
   fileData: {},
-  fileUploadStatus: false,
+  fileId:null,
 };
 
 const reducer = (state = initialState, action) => {
   if (action.type === "UPLOAD") {
     return {
       fileData: {},
-      fileUploadStatus: true,
+      fileId: action.payload
     };
   } else {
     return state;

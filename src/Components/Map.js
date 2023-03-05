@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo } from "react";
 import {
   useLoadScript,
   GoogleMap,
@@ -6,33 +6,42 @@ import {
   DirectionsRenderer,
   // Circle,
   // MarkerClusterer
-} from '@react-google-maps/api';
-import locs from '../Output/locs';
-import result from '../Output/result';
+} from "@react-google-maps/api";
+import locs from "../Output/locs";
+import result from "../Output/result";
 
-import { useSelector } from 'react-redux';
-
+import { useSelector } from "react-redux";
 
 const Map = (props) => {
-  const { selectedRoute, mapRoutes } = useSelector(state => state.routes);
-  let locationData  = useSelector(state => state.nodes.nodes);
-  locationData = locationData.filter(loc => loc.node !== result[0].depotNode)
+  const solutionData = useSelector((state) => state.solution.solutionData);
+  const { selectedRoute, mapRoutes } = useSelector((state) => state.routes);
+  let locationData = useSelector((state) => state.nodes.nodes);
+  locationData = locationData.filter((loc) => loc.node !== result[0].depotNode);
 
   const containerStyle = {
-    width: '100%',
-    height: '410px'
-  }
-  const center = useMemo(() => ({ lat: locs[0].latitude, lng: locs[0].longitude }), []);
-  const options = useMemo(() => ({
-    disableDefaultUI: false,
-    clickableIcons: false
-  }), []);
-  const image = process.env.PUBLIC_URL + '/warehouse.png'
+    width: "100%",
+    height: "410px",
+  };
+  const center = useMemo(
+    () => ({
+      lat: solutionData?.nodeData[solutionData.depotNode - 1].latitude,
+      lng: solutionData?.nodeData[solutionData.depotNode - 1].longitude,
+    }),
+    []
+  );
+  const options = useMemo(
+    () => ({
+      disableDefaultUI: false,
+      clickableIcons: false,
+    }),
+    []
+  );
+  const image = process.env.PUBLIC_URL + "/warehouse.png";
 
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.REACT_APP_MAP_KEY
-  })
-  if (!isLoaded) return <div>Loading...</div>
+    googleMapsApiKey: process.env.REACT_APP_MAP_KEY,
+  });
+  if (!isLoaded) return <div>Loading...</div>;
 
   return (
     <GoogleMap
@@ -41,32 +50,31 @@ const Map = (props) => {
       options={options}
       zoom={10}
     >
-      <MarkerF
-        position={center}
-        icon={image}
-      />
+      <MarkerF position={center} icon={image} />
 
-      {
-        locationData.map(loc => <MarkerF
-          key={loc.latitude}
-          position={{lat: loc.latitude, lng: loc.longitude}}
+      {solutionData?.nodeData.map((loc,index) => (
+        index!==0?<MarkerF
+          key={index}
+          position={{ lat: loc.latitude, lng: loc.longitude }}
           label={loc.node.toString()}
-        />)
-      }
+        />:null
+      ))}
 
-      {mapRoutes.map((route, index) => <DirectionsRenderer
-          directions={selectedRoute===null ? route.dir : selectedRoute.dir}
+      {mapRoutes.map((route, index) => (
+        <DirectionsRenderer
+          directions={selectedRoute === null ? route.dir : selectedRoute.dir}
           options={{
             polylineOptions: {
-              strokeColor: selectedRoute===null ? route.clr : selectedRoute.clr
+              strokeColor:
+                selectedRoute === null ? route.clr : selectedRoute.clr,
             },
             suppressMarkers: true,
           }}
-          key={index} 
-      />)} 
-
+          key={index}
+        />
+      ))}
     </GoogleMap>
-  )
-}
+  );
+};
 
-export default Map
+export default Map;

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Plot from "react-plotly.js";
+import { useSelector } from "react-redux";
 
 const Graph = () => {
-  const [xaxis, setXaxis] = useState([]);
-  const [yaxis, setYaxis] = useState([]);
+  const [data, setData] = useState();
 
   const [dataPoints, setDataPoints] = useState({});
 
@@ -122,76 +122,93 @@ const Graph = () => {
       },
     },
   };
+  const solutionData = useSelector((state) => state.solution.solutionData);
 
   useEffect(() => {
-    createAxis();
-    createEdge();
+    createGraph();
   }, []);
 
-  const createAxis = () => {
-    for (const ele of response.data.problemInfo.nodeData) {
-      setXaxis((xaxis) => [...xaxis, ele.latitude]);
-      setYaxis((yaxis) => [...yaxis, ele.longitude]);
-    }
-  };
-
-  const pointsData = [
-    {
-      x: xaxis,
-      y: yaxis,
-      mode: "markers",
-      marker: {
-        color: "black",
-        size: 10,
-      },
-      type: "scatter",
-    },
-    {
-      x: [response.data.problemInfo.nodeData[response.data.problemInfo.depotNode]
-        .latitude],
-      y: [response.data.problemInfo.nodeData[response.data.problemInfo.depotNode]
-        .longitude],
-      mode: "markers",
-      marker: {
-        color: "red",
-        symbol: 'cross',
-        size: 10,
-      },
-      type: "scatter",
-    },
-  ];
-  const createEdge = () => {
-    const colors = ["red", "blue", "green", "black", "purple","orange"];
-    let i = 0
-    for (let tour of response.data.problemInfo.solution.routes) {
-      const x = [];
-      const y = [];
-      for (const ele of tour.tour) {
-        console.log("element of tour =>", ele);
-        x.push(response.data.problemInfo.nodeData[ele - 1].latitude);
-        y.push(response.data.problemInfo.nodeData[ele - 1].longitude);
+  const createGraph = () => {
+    let data = [];
+    let Xaxis = [];
+    let Yaxis = [];
+    let Demand = [];
+    for (const [index, value] of solutionData.solution.entries()) {
+      for (const ele of value.tour) {
+        Xaxis.push(solutionData.nodeData[ele - 1].latitude);
+        Yaxis.push(solutionData.nodeData[ele - 1].longitude);
+        Demand.push(solutionData.nodeData[ele - 1].demand);
       }
-
-      pointsData.push({
-        x: x,
-        y: y,
-        mode: "lines",
-        line: {
-          color: colors[i],
-          width: 2,
-        },
+      Xaxis.push(solutionData.nodeData[0].latitude);
+      Yaxis.push(solutionData.nodeData[0].longitude);
+      console.log(Xaxis);
+      data.push({
         type: "scatter",
+        mode: "lines+markers",
+        x: Xaxis,
+        y: Yaxis,
+        text: Demand,
+        marker: {
+          symbol: "arrow",
+          size: 15,
+          angleref: "previous",
+          standoff: 5,
+        },
+        name: `Tour ${index + 1}`,
+        showlegend: true,
+        hoverinfo: "skip",
       });
-      i++;
+      data.push({
+        type: "scatter",
+        mode: "markers",
+        x: Xaxis,
+        y: Yaxis,
+        name: `Tour ${index + 1}`,
+        text: Demand,
+        marker: {
+          symbol: "circle",
+          size: 10,
+          color: "#0883ff",
+          line: {
+            width: 1,
+            color: "black",
+          },
+        },
+        showlegend: false,
+        hovertemplate: `<b>Latitude</b>: %{x}<br><b>Longitude</b>: %{y}<br><b>Demand</b>:%{text}`,
+      });
+
+      Xaxis = [];
+      Yaxis = [];
     }
-    setDataPoints(pointsData);
+    data.push({
+      type: "scatter",
+      mode: "markers",
+      x: [solutionData.nodeData[0].latitude],
+      y: [solutionData.nodeData[0].longitude],
+      text: Demand,
+      marker: {
+        symbol: "circle",
+        size: 15,
+        color: "crimson",
+        line: {
+          width: 1,
+          color: "black",
+        },
+      },
+      showlegend: false,
+      hovertemplate: `<b>Latitude</b>: %{x}<br><b>Longitude</b>: %{y}<br><b>Demand</b>:%{text}`,
+    });
+
+    setData(data);
   };
+  console.log("graph =>", data);
 
   return (
     <>
       <Plot
-        data={dataPoints}
-        layout={{ width: 700, height: 500, title: "Routing" }}
+        data={data}
+        layout={{ width: 1000, height: 550, title: "Routing" }}
       />
     </>
   );

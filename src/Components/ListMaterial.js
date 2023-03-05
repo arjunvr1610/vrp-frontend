@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux';
 import actionCreators from '../Store/index';
 
 const ListMaterial = (props) => {
-    const { Tour, vehicle, cost, color } = props;
+    const { Tour, vehicle, cost, color, distance } = props;
     const dispatch = useDispatch();
     const { selectRoute } = bindActionCreators(actionCreators, dispatch);
     const mapRoutes = useSelector(state => state.routes.mapRoutes);
@@ -17,13 +17,13 @@ const ListMaterial = (props) => {
     }
 
     const secText = (
-        <>
-        <span style={{display: 'block'}}>Vehicle: ${vehicle}</span>
-        <span style={{display: 'block'}}>Cost: ${cost}</span>
-        </>
-    )
+      <>
+        <span style={{ display: "block" }}>Distance: {distance} Km</span>
+        {/* <span style={{display: 'block'}}>Cost: ${cost}</span> */}
+      </>
+    );
     const primText = (
-        <Typography variant="h6" marginTop={2} color={color}>{`Tour ${Tour}`}</Typography>
+        <Typography variant="h6" marginTop={2} color={color}>{`Tour ${Tour+1}`}</Typography>
     )
     return (
         <>

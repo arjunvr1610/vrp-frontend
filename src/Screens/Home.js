@@ -13,7 +13,10 @@ import Switch from "@mui/material/Switch";
 import Graph from "../Components/Graph";
 
 const Home = () => {
-  const { fileUploadStatus } = useSelector((state) => state.file);
+  const { routeSolutionStatus } = useSelector(
+    (state) => state.solution
+  );
+  
   const [isMapView, setisMapView] = useState(true);
   return (
     <Box component="main" sx={{ flexGrow: 1, p: 3, bgcolor: "#F4F6F6" }}>
@@ -22,9 +25,10 @@ const Home = () => {
       <Grid container spacing={0}>
         <Grid item xs={12}>
           <Switch
+            disabled={!routeSolutionStatus}
             value={isMapView}
             defaultChecked
-            color="warning"
+            color="primary"
             onChange={() => setisMapView((prev) => !prev)}
           />
           <span>{!isMapView ? "Node View" : "Map View"}</span>
@@ -39,11 +43,11 @@ const Home = () => {
           <Card style={{ height: 450, overflow: "auto" }}>
             {isMapView ? (
               <CardContent>
-                {fileUploadStatus === false ? <Map /> : "Upload a file"}
+                {routeSolutionStatus === true ? <Map /> : "Upload a file"}
               </CardContent>
             ) : (
               <CardContent>
-                <Graph/>
+                <Graph />
               </CardContent>
             )}
           </Card>
