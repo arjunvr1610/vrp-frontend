@@ -1,8 +1,10 @@
 // file
 
 import axios from "axios";
-let URL_ =
-  "http://ip172-18-0-34-cg2f0tg1k7jg00eq6ojg-3000.direct.labs.play-with-docker.com/graphql";
+let URL_ = window.location.origin.replace(
+  /([a-zA-Z0-9-:/]*-)(\d{2,4})(\.direct\.labs\.play-with-docker\.com)/g,
+  "$13000$3"
+);
 
 export const uploadFile = (file) => {
   return async (dispatch) => {
