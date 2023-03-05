@@ -8,5 +8,3 @@ services:
     image: jonty99/vrp-frontend-react:latest
     ports:
       - "80:80"
-    environment:
-      - REACT_APP_MAP_KEY=AIzaSyDsDKH-37DS6ZnGY_oIi7t5YE0oAAZ-V88

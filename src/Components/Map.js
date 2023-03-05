@@ -39,7 +39,7 @@ const Map = (props) => {
   const image = process.env.PUBLIC_URL + "/warehouse.png";
 
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.REACT_APP_MAP_KEY,
+    googleMapsApiKey: 'AIzaSyDsDKH-37DS6ZnGY_oIi7t5YE0oAAZ-V88',
   });
   if (!isLoaded) return <div>Loading...</div>;
 
