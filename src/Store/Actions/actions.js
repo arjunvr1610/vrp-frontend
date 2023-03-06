@@ -1,11 +1,16 @@
 // file
 
 import axios from "axios";
+
 let URL_ = window.location.origin.replace(
   /([a-zA-Z0-9-:/]*-)(\d{2,4})(\.direct\.labs\.play-with-docker\.com)/g,
   "$13000$3"
 );
-URL_ = URL_+"/graphql"
+if (window.location.hostname === "localhost") {
+  URL_ =
+    "http://ip172-19-0-99-cg2r6b81k7jg00dhgpi0-3000.direct.labs.play-with-docker.com";
+}
+URL_ = URL_ + "/graphql";
 
 export const uploadFile = (file) => {
   return async (dispatch) => {
@@ -138,6 +143,7 @@ export const saveSolution = (solutionData) => {
   };
 };
 
+let intervalID;
 export const fetchSolution = (id) => {
   return async (dispatch) => {
     try {
@@ -213,37 +219,55 @@ export const fetchSolution = (id) => {
         });
       };
       await request();
-      // let intervalID = null;
-      // intervalID = setInterval(fetchUpdatedSolution,3000);
-      // const fetchUpdatedSolution = async () => {
 
-      //   const res = await axios({
-      //     url: URL_,
-      //     method: "post",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     data: {
-      //       query: `
-      //             query problemInfo($id: ID!) {
-      //               problemInfo(id: $id) {
-      //                 id
-      //                 solution {
-      //                   routes {
-      //                     tour
-      //                     tourDistance
-      //                   }
-      //                   totalDistance
-      //                 }
-      //               }
-      //             }
-      //           `,
-      //       variables: {
-      //         id: id,
-      //       },
-      //     },
-      //   });
-      // };
+      const fetchUpdatedSolution = async () => {
+        const res = await axios({
+          url: URL_,
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          data: {
+            query: `
+                  query problemInfo($id: ID!) {
+                    problemInfo(id: $id) {
+                      id
+                      dimension
+                      solution {
+                        routes {
+                          tour
+                          tourDistance
+                        }
+                        totalDistance
+                      }
+                    }
+                  }
+                `,
+            variables: {
+              id: id,
+            },
+          },
+        });
+        const result = res.data.data.problemInfo;
+        let totalDistance =
+          result.solution.routes
+            ?.map((t) => t.tourDistance)
+            ?.reduce((acc, l) => acc + l, 0);
+        const sum =
+          result.solution.routes
+            ?.map((t) => t.tour.length - 1)
+            ?.reduce((acc, l) => acc + l, 0) + 1;
+        if (sum === result.dimension) {
+          clearTimeout(intervalID);
+          dispatch({
+            type: "FETCH_UPDATED_SOL",
+            payload: {totalDistance:totalDistance,result:result.solution.routes},
+          });
+        }
+        console.log(result);
+        console.log("SUM ", sum, result.dimension);
+      };
+      intervalID = setInterval(fetchUpdatedSolution, 3000);
     } catch (err) {
       throw new Error(err.message);
     }

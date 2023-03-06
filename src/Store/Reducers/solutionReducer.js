@@ -1,9 +1,4 @@
 const initialState = {
-  routes: [],
-  nodes: [],
-  totalDistance: 0,
-  totalDemand: 0,
-  totalVehicles: 0,
   solutionData: null,
   routeSolutionStatus: false,
   routeAssigned: false,
@@ -19,6 +14,15 @@ const reducer = (state = initialState, action) => {
       ...state,
       solutionData: action.payload,
       routeSolutionStatus: true,
+    };
+  } else if (action.type === "FETCH_UPDATED_SOL") {
+    return {
+      ...state,
+      solutionData: {
+        ...state.solutionData,
+        solution: action.payload.result,
+        totalDistance: action.payload.totalDistance,
+      },
     };
   } else if (action.type === "DELETE_SOL") {
     return state;
