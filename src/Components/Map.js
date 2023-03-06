@@ -20,7 +20,7 @@ const Map = (props) => {
 
   const containerStyle = {
     width: "100%",
-    height: "410px",
+    height: "700px",
   };
   const center = useMemo(
     () => ({
@@ -39,7 +39,7 @@ const Map = (props) => {
   const image = process.env.PUBLIC_URL + "/warehouse.png";
 
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: 'AIzaSyDsDKH-37DS6ZnGY_oIi7t5YE0oAAZ-V88',
+    googleMapsApiKey: process.env.REACT_APP_MAP_KEY,
   });
   if (!isLoaded) return <div>Loading...</div>;
 

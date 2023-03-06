@@ -154,6 +154,9 @@ const Graph = () => {
           angleref: "previous",
           standoff: 5,
         },
+        line: {
+          color: Math.floor((Math.abs(Math.sin(index+1) * 16777215))).toString(16)
+        },
         name: `Tour ${index + 1}`,
         showlegend: true,
         hoverinfo: "skip",
@@ -208,7 +211,8 @@ const Graph = () => {
     <>
       <Plot
         data={data}
-        layout={{ width: 1000, height: 550, title: "Routing" }}
+        layout={{ width: 950, height: 750, title: "Routing" }}
+        config={{responsive: true}}
       />
     </>
   );

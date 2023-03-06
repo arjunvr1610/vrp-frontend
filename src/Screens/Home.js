@@ -19,7 +19,7 @@ const Home = () => {
   
   const [isMapView, setisMapView] = useState(true);
   return (
-    <Box component="main" sx={{ flexGrow: 1, p: 3, bgcolor: "#F4F6F6" }}>
+    <Box component="main" sx={{ height: '100vh', flexGrow: 1, p: 3, bgcolor: "#F4F6F6" }}>
       <AddLocModal />
       <RemoveLocModal />
       <Grid container spacing={0}>
@@ -40,7 +40,7 @@ const Home = () => {
           <Accords />
         </Grid>
         <Grid item xs={12} sm={9}>
-          <Card style={{ height: 450, overflow: "auto" }}>
+          <Card style={{ height: '100%', overflow: "auto" }}>
             {isMapView ? (
               <CardContent>
                 {routeSolutionStatus === true ? <Map /> : "Upload a file"}
