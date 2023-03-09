@@ -8,7 +8,7 @@ let URL_ = window.location.origin.replace(
 );
 if (window.location.hostname === "localhost") {
   URL_ =
-    "http://localhost:8080";
+    "http://ip172-18-0-120-cg4qmd0sf2q000fvt940-3000.direct.labs.play-with-docker.com";
 }
 URL_ = URL_ + "/graphql";
 
@@ -143,12 +143,22 @@ export const saveSolution = (solutionData) => {
   };
 };
 
+
+export const readyView = (arg) => {
+  return (dispatch) => {
+    dispatch({
+      type: "READY_VIEW",
+      graphReady: arg,
+    });
+  }
+}
+
 let intervalID;
 export const fetchSolution = (id) => {
   return async (dispatch) => {
     try {
       console.log("chalra", id);
-
+      let startTime = Date.now()
       // until backend gives sol we req, so 3 sec delay for low oopsie
       const request = async () => {
         const res = await axios({
@@ -257,11 +267,15 @@ export const fetchSolution = (id) => {
           result.solution.routes
             ?.map((t) => t.tour.length - 1)
             ?.reduce((acc, l) => acc + l, 0) + 1;
-        if (sum === result.dimension) {
+        if (sum === result.dimension || Date.now() - startTime > Math.ceil(result.dimension/1000)*60*1000) {
           clearTimeout(intervalID);
           dispatch({
             type: "FETCH_UPDATED_SOL",
-            payload: {totalDistance:totalDistance,result:result.solution.routes},
+            payload: {
+              totalDistance: totalDistance,
+              result: result.solution.routes,
+              graphReady: true,
+            },
           });
         }
         console.log(result);

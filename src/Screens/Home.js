@@ -11,15 +11,18 @@ import RemoveLocModal from "../Components/RemoveLocModal";
 import { useSelector } from "react-redux";
 import Switch from "@mui/material/Switch";
 import Graph from "../Components/Graph";
+import { CircularProgress } from "@mui/material";
 
 const Home = () => {
-  const { routeSolutionStatus } = useSelector(
-    (state) => state.solution
-  );
-  
-  const [isMapView, setisMapView] = useState(true);
+  const { routeSolutionStatus } = useSelector((state) => state.solution);
+  let graphReady = useSelector((state) => state.solution.graphReady);
+
+  const [isMapView, setisMapView] = useState(false);
   return (
-    <Box component="main" sx={{ height: '100vh', flexGrow: 1, p: 3, bgcolor: "#F4F6F6" }}>
+    <Box
+      component="main"
+      sx={{ height: "100vh", flexGrow: 1, p: 3, bgcolor: "#F4F6F6" }}
+    >
       <AddLocModal />
       <RemoveLocModal />
       <Grid container spacing={0}>
@@ -31,7 +34,7 @@ const Home = () => {
             color="primary"
             onChange={() => setisMapView((prev) => !prev)}
           />
-          <span>{!isMapView ? "Node View" : "Map View"}</span>
+          <span>{!isMapView ? "Graph View" : "Map View"}</span>
         </Grid>
         <Grid item xs={12}>
           <TrackingBar />
@@ -40,17 +43,29 @@ const Home = () => {
           <Accords />
         </Grid>
         <Grid item xs={12} sm={9}>
-          <Card style={{ height: '100%', overflow: "auto" }}>
-            {isMapView ? (
+          {!isMapView? (
+            <Card style={{ display:"flex", alignItems:"center",justifyContent:'center', height: "100%", overflow: "auto" }}>
+              {graphReady ? (
+                <CardContent>
+                  <Graph />
+                </CardContent>
+              ) : (
+                <CardContent>
+                  {routeSolutionStatus ? (
+                    <CircularProgress size={"3rem"} />
+                  ) : (
+                    "Upload a .vrp File"
+                  )}
+                </CardContent>
+              )}
+            </Card>
+          ) : (
+            <Card style={{ height: "100%", overflow: "auto" }}>
               <CardContent>
-                {routeSolutionStatus === true ? <Map /> : "Upload a file"}
+                {routeSolutionStatus === true ? <Map /> : null}
               </CardContent>
-            ) : (
-              <CardContent>
-                <Graph />
-              </CardContent>
-            )}
-          </Card>
+            </Card>
+          )}
         </Grid>
       </Grid>
     </Box>

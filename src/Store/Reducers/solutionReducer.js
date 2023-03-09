@@ -2,6 +2,7 @@ const initialState = {
   solutionData: null,
   routeSolutionStatus: false,
   routeAssigned: false,
+  graphReady: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -23,9 +24,15 @@ const reducer = (state = initialState, action) => {
         solution: action.payload.result,
         totalDistance: action.payload.totalDistance,
       },
+      graphReady: action.payload.graphReady,
     };
   } else if (action.type === "DELETE_SOL") {
     return state;
+  } else if (action.type === "READY_VIEW") {
+    return {
+      ...state,
+      graphReady: action.graphReady,
+    };
   } else if (action.type === "ROUTE_ASSIGNED") {
     return {
       ...state,

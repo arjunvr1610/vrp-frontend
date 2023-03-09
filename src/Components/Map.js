@@ -22,13 +22,11 @@ const Map = (props) => {
     width: "100%",
     height: "700px",
   };
-  const center = useMemo(
-    () => ({
-      lat: solutionData?.nodeData[solutionData.depotNode - 1].latitude,
-      lng: solutionData?.nodeData[solutionData.depotNode - 1].longitude,
-    }),
-    []
-  );
+  const center = {
+    lat: solutionData?.nodeData[solutionData.depotNode - 1].latitude,
+    lng: solutionData?.nodeData[solutionData.depotNode - 1].longitude,
+  };
+
   const options = useMemo(
     () => ({
       disableDefaultUI: false,
@@ -48,17 +46,19 @@ const Map = (props) => {
       mapContainerStyle={containerStyle}
       center={center}
       options={options}
-      zoom={10}
+      zoom={14}
     >
       <MarkerF position={center} icon={image} />
 
-      {solutionData?.nodeData.map((loc,index) => (
-        index!==0?<MarkerF
-          key={index}
-          position={{ lat: loc.latitude, lng: loc.longitude }}
-          label={loc.node.toString()}
-        />:null
-      ))}
+      {solutionData?.nodeData.map((loc, index) =>
+        index !== 0 ? (
+          <MarkerF
+            key={index}
+            position={{ lat: loc.latitude, lng: loc.longitude }}
+            label={loc.node.toString()}
+          />
+        ) : null
+      )}
 
       {mapRoutes.map((route, index) => (
         <DirectionsRenderer

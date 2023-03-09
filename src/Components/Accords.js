@@ -38,6 +38,7 @@ export default function Accords() {
     emptyRoutes,
     fetchSolution,
     assignRoute,
+    readyView,
   } = bindActionCreators(actionCreators, dispatch);
 
   const { mapRoutes } = useSelector((state) => state.routes);
@@ -62,6 +63,7 @@ export default function Accords() {
       if (file) {
         setLoader(true);
         e.preventDefault();
+
         let parsed = new Uint8Array(await file.arrayBuffer());
         parsed = Array.from(parsed);
         await uploadFile(parsed);
@@ -81,7 +83,9 @@ export default function Accords() {
   const onFindSolution = async () => {
     setLoader(true);
     if (fileId) {
+      await readyView(false);
       await fetchSolution(fileId);
+      
       if (solutionData) {
         await storeNodes(solutionData.nodeData);
       }
@@ -121,7 +125,11 @@ export default function Accords() {
           },
           (result, status) => {
             if (status === window.google.maps.DirectionsStatus.OK) {
-              storeRoutes({ dir: result, clr: colors[index], tourDistance: solutionData.solution[index].tourDistance});
+              storeRoutes({
+                dir: result,
+                clr: colors[index],
+                tourDistance: solutionData.solution[index].tourDistance,
+              });
             } else {
               console.error(`error fetching directions ${result}`);
             }
@@ -129,7 +137,6 @@ export default function Accords() {
         );
       })
     );
-    
   };
 
   const onSubmitNodes = async () => {
@@ -143,13 +150,26 @@ export default function Accords() {
   };
 
   const colors = [
-    "#C70039 ",
-    "#19AF3F",
-    "#0A517F",
-    "#7B0680",
-    "#F96AE3",
-    "#EC177E",
-    "#FFC300",
+    "#FFDAB9",
+    "#F4A460",
+    "#FFDEAD",
+    "#FFA07A",
+    "#FF69B4",
+    "#BA55D3",
+    "#7B68EE",
+    "#6495ED",
+    "#00BFFF",
+    "#1E90FF",
+    "#87CEEB",
+    "#32CD32",
+    "#90EE90",
+    "#00FA9A",
+    "#FFD700",
+    "#FFFF00",
+    "#DAA520",
+    "#BDB76B",
+    "#808000",
+    "#2F4F4F",
   ];
 
   return (
@@ -280,7 +300,7 @@ export default function Accords() {
       <Accordion
         expanded={expanded === "panel3"}
         onChange={handleChange("panel3")}
-        disabled={!routeAssigned}
+        disabled={false}
       >
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
