@@ -6,9 +6,10 @@ const initialState = {
 const reducer = (state = initialState, action) => {
     if (action.type === 'STORE_ROUTES') {
         const payload = action.payload;
-        console.log("STORE ROUTES => ",payload)
+        const sortedMapRoutes = [...state.mapRoutes, payload].sort((a, b) => a.index - b.index)
+        console.log("STORE ROUTES => ", payload)
         return ({
-            mapRoutes: [...state.mapRoutes, payload],
+            mapRoutes: sortedMapRoutes,
             selectedRoute: null,
         });
     } 
