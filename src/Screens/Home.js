@@ -11,7 +11,10 @@ import RemoveLocModal from "../Components/RemoveLocModal";
 import { useSelector } from "react-redux";
 import Switch from "@mui/material/Switch";
 import Graph from "../Components/Graph";
-import { CircularProgress } from "@mui/material";
+import Lottie from "lottie-react";
+
+import mapLoader from "../animations/map-load.json";
+
 
 const Home = () => {
   const { routeSolutionStatus } = useSelector((state) => state.solution);
@@ -19,10 +22,7 @@ const Home = () => {
 
   const [isMapView, setisMapView] = useState(false);
   return (
-    <Box
-      component="main"
-      sx={{ height: "100vh", flexGrow: 1, p: 3, bgcolor: "#F4F6F6" }}
-    >
+    <Box component="main" sx={{ height: "100vh", flexGrow: 1, p: 3 }}>
       <AddLocModal />
       <RemoveLocModal />
       <Grid container spacing={0}>
@@ -43,16 +43,27 @@ const Home = () => {
           <Accords />
         </Grid>
         <Grid item xs={12} sm={9}>
-          {!isMapView? (
-            <Card style={{ display:"flex", alignItems:"center",justifyContent:'center', height: "100%", overflow: "auto" }}>
+          {!isMapView ? (
+            <Card
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                height: "100%",
+                overflow: "auto",
+              }}
+            >
               {graphReady ? (
                 <CardContent>
                   <Graph />
                 </CardContent>
               ) : (
                 <CardContent>
+                  
                   {routeSolutionStatus ? (
-                    <CircularProgress size={"3rem"} />
+                    <div style={{ display:"flex", margin:0,padding:0,width: "100%",height:"500px",overflow:"hidden" }}>
+                      <Lottie animationData={mapLoader} loop={true}></Lottie>
+                    </div>
                   ) : (
                     "Upload a .vrp File"
                   )}

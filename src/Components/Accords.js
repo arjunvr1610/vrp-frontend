@@ -126,11 +126,8 @@ export default function Accords() {
           (result, status) => {
             if (status === window.google.maps.DirectionsStatus.OK) {
               storeRoutes({
-                index: index,
                 dir: result,
-                clr: `#${Math.floor(
-                  Math.abs(Math.sin(index + 1) * 16777215)
-                ).toString(16)}`,
+                clr: colors[index],
                 tourDistance: solutionData.solution[index].tourDistance,
               });
             } else {
@@ -152,28 +149,28 @@ export default function Accords() {
     // submitNodes(solutionData.nodeData);
   };
 
-  // const colors = [
-  //   "#FFDAB9",
-  //   "#F4A460",
-  //   "#FFDEAD",
-  //   "#FFA07A",
-  //   "#FF69B4",
-  //   "#BA55D3",
-  //   "#7B68EE",
-  //   "#6495ED",
-  //   "#00BFFF",
-  //   "#1E90FF",
-  //   "#87CEEB",
-  //   "#32CD32",
-  //   "#90EE90",
-  //   "#00FA9A",
-  //   "#FFD700",
-  //   "#FFFF00",
-  //   "#DAA520",
-  //   "#BDB76B",
-  //   "#808000",
-  //   "#2F4F4F",
-  // ];
+  const colors = [
+    "#FFDAB9",
+    "#F4A460",
+    "#FFDEAD",
+    "#FFA07A",
+    "#FF69B4",
+    "#BA55D3",
+    "#7B68EE",
+    "#6495ED",
+    "#00BFFF",
+    "#1E90FF",
+    "#87CEEB",
+    "#32CD32",
+    "#90EE90",
+    "#00FA9A",
+    "#FFD700",
+    "#FFFF00",
+    "#DAA520",
+    "#BDB76B",
+    "#808000",
+    "#2F4F4F",
+  ];
 
   return (
     <div>
