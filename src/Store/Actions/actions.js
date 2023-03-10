@@ -8,7 +8,7 @@ let URL_ = window.location.origin.replace(
 );
 if (window.location.hostname === "localhost") {
   URL_ =
-    "http://ip172-19-0-122-cg5ineie69v000dok8e0-3000.direct.labs.play-with-docker.com"}
+    "http://ip172-19-0-32-cg5qbiie69v000aql8g0-3000.direct.labs.play-with-docker.com";}
 URL_ = URL_ + "/graphql";
 
 export const uploadFile = (file) => {
@@ -322,11 +322,11 @@ export const deleteSolution = (solutionId) => {
 };
 
 // modal actions
-export const openAddLocModal = () => {
+export const openAddLocModal = (index,loc) => {
   return (dispatch) => {
     dispatch({
       type: "OPEN_ADD_LOC",
-      payload: null,
+      payload: {index:index,loc:loc},
     });
   };
 };
@@ -339,6 +339,15 @@ export const closeAddLocModal = () => {
     });
   };
 };
+
+export const addChip = (chip) => {
+  return (dispatch) => {
+    dispatch({
+      type:"ADD_CHIP",
+      payload:chip
+    })
+  }
+}
 
 export const openRemoveLocModal = () => {
   return (dispatch) => {

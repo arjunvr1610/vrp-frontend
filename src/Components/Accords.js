@@ -47,6 +47,7 @@ export default function Accords() {
   // const locationsData = useSelector((state) => state.nodes.nodes);
   const fileId = useSelector((state) => state.file.fileId);
   const solutionData = useSelector((state) => state.solution.solutionData);
+
   console.log("Solution Frontend =>", solutionData);
   console.log("FILE ID => ", fileId);
 
@@ -66,6 +67,7 @@ export default function Accords() {
 
         let parsed = new Uint8Array(await file.arrayBuffer());
         parsed = Array.from(parsed);
+        console.log("PARSED=>", parsed);
         await uploadFile(parsed);
         setLoader(false);
         // const timeoutId = setTimeout(function () {
@@ -85,7 +87,7 @@ export default function Accords() {
     if (fileId) {
       await readyView(false);
       await fetchSolution(fileId);
-      
+
       if (solutionData) {
         await storeNodes(solutionData.nodeData);
       }
@@ -226,7 +228,7 @@ export default function Accords() {
       <Accordion
         expanded={expanded === "panel2"}
         onChange={handleChange("panel2")}
-        disabled={!routeSolutionStatus}
+        disabled={!routeSolutionStatus} // change it to !routeSolutionStatus
       >
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
@@ -238,66 +240,56 @@ export default function Accords() {
           </Typography>
         </AccordionSummary>
         <AccordionDetails style={{ display: "flex", flexDirection: "column" }}>
-          {/* <div
-            style={{
-              justifyContent: "space-between",
-              flexDirection: "row",
-              display: "flex",
-            }}
-          >
-            <IconButton
-              aria-label="remove-location"
-              size="large"
-              edge="start"
-              sx={{ mr: 2 }}
-              onClick={() => openRemoveLocModal()}
+          {solutionData?.nodeData && (
+            <Card style={{ maxHeight: 450, overflow: "auto" }}>
+              <CardContent>
+                <List
+                  sx={{
+                    width: "100%",
+                    maxWidth: 360,
+                    bgcolor: "background.paper",
+                  }}
+                >
+                  {solutionData?.nodeData?.map((loc, index) => (
+                    <ListItemButton
+                      alignItems="flex-start"
+                      divider={true}
+                      onClick={() => openAddLocModal(index,loc.demand)}
+                      key={index}
+                    >
+                      <ListItemText
+                        primary={`Node ${loc.node} `}
+                        secondary={`Lat: ${loc.latitude} Long: ${loc.longitude} Demand: ${loc.demand} `}
+                      />
+                    </ListItemButton>
+                  ))}
+                </List>
+              </CardContent>
+            </Card>
+          )}
+          {solutionData?.nodeData ? (
+            <Button
+              style={{ margin: "20px" }}
+              variant="contained"
+              onClick={() => {
+                onSubmitNodes();
+              }}
             >
-              <WrongLocationIcon sx={{ fontSize: 50 }} />
-            </IconButton>
-            <IconButton
-              aria-label="add-new-location"
-              size="large"
-              edge="end"
-              sx={{ mr: 2 }}
-              onClick={() => openAddLocModal()}
+              Find Route
+            </Button>
+          ) : (
+            <span
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 15,
+                color: "#7a7a7a",
+              }}
             >
-              <AddLocationIcon sx={{ fontSize: 50 }} />
-            </IconButton>
-          </div> */}
-          <Card style={{ maxHeight: 450, overflow: "auto" }}>
-            <CardContent>
-              <List
-                sx={{
-                  width: "100%",
-                  maxWidth: 360,
-                  bgcolor: "background.paper",
-                }}
-              >
-                {solutionData?.nodeData?.map((loc, index) => (
-                  <ListItemButton
-                    alignItems="flex-start"
-                    divider={true}
-                    onClick={() => {}}
-                    key={index}
-                  >
-                    <ListItemText
-                      primary={`Node ${loc.node} `}
-                      secondary={`Lat: ${loc.latitude} Long: ${loc.longitude} Demand: ${loc.demand} `}
-                    />
-                  </ListItemButton>
-                ))}
-              </List>
-            </CardContent>
-          </Card>
-          <Button
-            style={{ margin: "20px" }}
-            variant="contained"
-            onClick={() => {
-              onSubmitNodes();
-            }}
-          >
-            Find Route
-          </Button>
+              Click Display
+            </span>
+          )}
         </AccordionDetails>
       </Accordion>
       <Accordion

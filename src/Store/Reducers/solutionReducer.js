@@ -3,6 +3,7 @@ const initialState = {
   routeSolutionStatus: false,
   routeAssigned: false,
   graphReady: false,
+  demandType:[]
 };
 
 const reducer = (state = initialState, action) => {
@@ -38,7 +39,14 @@ const reducer = (state = initialState, action) => {
       ...state,
       routeAssigned: action.payload,
     };
-  } else {
+  } else if(action.type === "ADD_CHIP") {
+    console.log(action.payload);
+    return {
+      ...state,
+      demandType:[...state.demandType,action.payload]
+    }
+  }
+  else {
     return state;
   }
 };

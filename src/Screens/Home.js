@@ -59,13 +59,21 @@ const Home = () => {
                 </CardContent>
               ) : (
                 <CardContent>
-                  
                   {routeSolutionStatus ? (
-                    <div style={{ display:"flex", margin:0,padding:0,width: "100%",height:"500px",overflow:"hidden" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        margin: 0,
+                        padding: 0,
+                        width: "100%",
+                        height: "500px",
+                        overflow: "hidden",
+                      }}
+                    >
                       <Lottie animationData={mapLoader} loop={true}></Lottie>
                     </div>
                   ) : (
-                    "Upload a .vrp File"
+                    "Upload a .xlsx File"
                   )}
                 </CardContent>
               )}
