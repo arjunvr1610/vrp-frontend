@@ -143,7 +143,7 @@ export default function Accords() {
   };
 
   const onSubmitNodes = async () => {
-    // emptyRoutes();
+    emptyRoutes();
     await calcRoutes({
       lat: solutionData.nodeData[0]?.latitude,
       lng: solutionData.nodeData[0]?.longitude,
@@ -195,7 +195,7 @@ export default function Accords() {
               <UploadFileIcon sx={{ fontSize: 100 }} />
             </IconButton>
             {file !== null ? (
-              <Chip label={file.name} variant="outlined" />
+              <Chip label={file?.name} variant="outlined" />
             ) : (
               <></>
             )}

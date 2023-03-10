@@ -8,7 +8,7 @@ let URL_ = window.location.origin.replace(
 );
 if (window.location.hostname === "localhost") {
   URL_ =
-    "http://127.0.0.1:8080"}
+    "http://ip172-19-0-122-cg5ineie69v000dok8e0-3000.direct.labs.play-with-docker.com"}
 URL_ = URL_ + "/graphql";
 
 export const uploadFile = (file) => {
