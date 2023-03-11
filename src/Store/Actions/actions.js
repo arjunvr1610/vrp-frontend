@@ -7,8 +7,9 @@ let URL_ = window.location.origin.replace(
   "$13000$3"
 );
 if (window.location.hostname === "localhost") {
-  URL_ =
-    "http://ip172-18-0-119-cg67fvie69v000ds4rh0-3000.direct.labs.play-with-docker.com";}
+  URL_ = "http://localhost:8080"
+  // URL_ = "http://ip172-18-0-119-cg67fvie69v000ds4rh0-3000.direct.labs.play-with-docker.com";
+}
 URL_ = URL_ + "/graphql";
 
 export const uploadFile = (file) => {

@@ -136,7 +136,7 @@ export default function Accords() {
                 dir: result,
                 clr: `#${Math.floor(
                   Math.abs(Math.sin(index + 1) * 16777215)
-                ).toString(16)}`,
+                ).toString(16).replace(/.{2}$/g, '00')}`,
                 tourDistance: solutionData.solution[index].tourDistance,
               });
             } else {
