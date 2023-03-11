@@ -89,7 +89,7 @@ const Graph = () => {
         mode: "markers",
         x: [solutionData.nodeData[0].latitude],
         y: [solutionData.nodeData[0].longitude],
-        text: ["0"],
+        text: [solutionData.nodeData[solutionData.depotNode-1].demand.toString()],
         marker: {
           symbol: "circle",
           size: 15,
