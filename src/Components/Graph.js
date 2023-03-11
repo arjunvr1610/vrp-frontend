@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Plot from "react-plotly.js";
 import { useSelector } from "react-redux";
+import { generateColor, darken } from '../utils/color';
 
 const Graph = () => {
   const [data, setData] = useState();
@@ -52,9 +53,7 @@ const Graph = () => {
             standoff: 5,
           },
           line: {
-            color: Math.floor(
-              Math.abs(Math.sin(index + 1) * 16777215)
-            ).toString(16).replace(/.{2}$/g, '00'),
+            color: darken(generateColor(index+1)),
           },
           name: `Tour ${index + 1}`,
           showlegend: true,

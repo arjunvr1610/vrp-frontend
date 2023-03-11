@@ -22,6 +22,7 @@ import actionCreators from "../Store/index";
 import locs from "../Output/locs";
 import result from "../Output/result";
 import CircularProgress from "@mui/material/CircularProgress";
+import { generateColor, darken } from '../utils/color';
 
 export default function Accords() {
   const [expanded, setExpanded] = useState(false);
@@ -134,9 +135,7 @@ export default function Accords() {
               storeRoutes({
                 index: index,
                 dir: result,
-                clr: `#${Math.floor(
-                  Math.abs(Math.sin(index + 1) * 16777215)
-                ).toString(16).replace(/.{2}$/g, '00')}`,
+                clr: darken(generateColor(index+1)),
                 tourDistance: solutionData.solution[index].tourDistance,
               });
             } else {
