@@ -11,6 +11,7 @@ import { bindActionCreators } from "redux";
 import actionCreators from "../Store/index";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
+import { Grid } from "@mui/material";
 
 const AddLocModal = () => {
   //   { pos: arr[j], label: label.toString() }
@@ -35,10 +36,35 @@ const AddLocModal = () => {
   const demandTypes = useSelector((state) => state.solution.demandType);
 
   const handleAdd = () => {
-    name.push(demandName);
-    count.push(demand);
-    chips.push({ name: demandName, count: demand });
-    setRemaining((prev) => prev - demand);
+    if (
+      demandName === undefined ||
+      demandName?.trim().length === 0 ||
+      name.includes(demandName)
+    ) {
+      window.alert("Invalid Input");
+    } else {
+      name.push(demandName);
+      count.push(parseInt(demand));
+      chips.push({ name: demandName, count: parseInt(demand) });
+      setRemaining((prev) => prev - demand);
+    }
+  };
+
+  console.log("CHIPS =>", chips);
+
+  const handleRemove = (item) => {
+    console.log(item);
+    let tempChips = chips.filter((x) => x.name !== item.name);
+    let tempName = name.filter((x) => x !== item.name);
+    let i = name.indexOf(item.name);
+    console.log("to remove =>", i);
+    let removed = count.splice(i, 1);
+
+    setChips(tempChips);
+    setName(tempName);
+    setCount(count);
+    setRemaining((prev) => prev + parseInt(removed[0]));
+    console.log(tempChips, "name=>", tempName, "count=>", count);
   };
 
   const start = () => {
@@ -51,7 +77,10 @@ const AddLocModal = () => {
       setChips(result);
       setName(ChipsFromStore[0]?.name);
       setCount(ChipsFromStore[0]?.count.map(Number));
-      const sum = ChipsFromStore[0]?.count.reduce((acc, curr) => parseInt(acc) + parseInt(curr), 0);
+      const sum = ChipsFromStore[0]?.count.reduce(
+        (acc, curr) => parseInt(acc) + parseInt(curr),
+        0
+      );
       setRemaining(loc - sum);
     } else {
       setRemaining(loc);
@@ -72,38 +101,61 @@ const AddLocModal = () => {
   };
 
   const onSubmit = async () => {
-    await addChip({ node: index+1, name: name, count: count });
+    if (remaining > 0) {
+      if (name.includes("Others")) {
+        let i = name.indexOf("Others");
+        count[i] = count[i] + remaining;
+      } else {
+        name.push("Others");
+        count.push(remaining);
+      }
+    }
+
+    console.log("Name=>", name, "Count=>", count);
+
+    await addChip({ node: index + 1, name: name, count: count });
     handleClose();
   };
 
   return (
     <div>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Node {index + 1}</DialogTitle>
-        <Stack
+      <Dialog open={open} onClose={handleClose} fullWidth={true}>
+        <div
           style={{
             display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            flexDirection: "row",
+            justifyContent: "space-between",
           }}
-          direction="row"
-          spacing={1}
         >
-          {chips.length !== 0
-            ? chips.map((item, index) => {
+          <DialogTitle>Node {index + 1}</DialogTitle>
+          <DialogTitle>Unused : {remaining}</DialogTitle>
+        </div>
+
+        {chips.length !== 0 ? (
+          <div
+            style={{
+              paddingLeft: "1rem",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <Grid direction="row" spacing={1}>
+              {chips.map((item, index) => {
                 return (
                   <Chip
+                    style={{ margin: "5px" }}
                     key={index}
-                    label={item.name + ":" + item.count}
+                    label={item.name + " : " + item.count}
                     color="primary"
-                    variant="outlined"
+                    clickable={true}
+                    onDelete={() => handleRemove(item)}
                   />
                 );
-              })
-            : null}
-        </Stack>
+              })}
+            </Grid>
+          </div>
+        ) : null}
         <DialogContent>
-          <DialogContentText>Remaining: {remaining}</DialogContentText>
           <TextField
             autoFocus
             margin="dense"
@@ -125,7 +177,10 @@ const AddLocModal = () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button disabled={remaining - demand < 0} onClick={handleAdd}>
+          <Button
+            disabled={remaining - demand < 0 || demand === 0}
+            onClick={handleAdd}
+          >
             Add New
           </Button>
           <Button onClick={onSubmit}>Done</Button>

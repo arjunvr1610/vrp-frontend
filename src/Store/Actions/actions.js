@@ -8,7 +8,7 @@ let URL_ = window.location.origin.replace(
 );
 if (window.location.hostname === "localhost") {
   URL_ =
-    "http://ip172-19-0-32-cg5qbiie69v000aql8g0-3000.direct.labs.play-with-docker.com";}
+    "http://ip172-18-0-119-cg67fvie69v000ds4rh0-3000.direct.labs.play-with-docker.com";}
 URL_ = URL_ + "/graphql";
 
 export const uploadFile = (file) => {
@@ -286,6 +286,15 @@ export const fetchSolution = (id) => {
     }
   };
 };
+
+export const assignDemandType = (demandType,originalSolution) => {
+  return async (dispatch) => {
+    console.log('/actions/assignDemandType')
+    console.log("ASSIGN DEMAND TYPE ACTION =>",demandType)
+
+  }
+}
+
 
 export const deleteSolution = (solutionId) => {
   return async (dispatch) => {

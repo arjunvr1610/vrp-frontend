@@ -39,11 +39,15 @@ export default function Accords() {
     fetchSolution,
     assignRoute,
     readyView,
+    assignDemandType
   } = bindActionCreators(actionCreators, dispatch);
 
   const { mapRoutes } = useSelector((state) => state.routes);
   const { routeSolutionStatus } = useSelector((state) => state.solution);
   const { routeAssigned } = useSelector((state) => state.solution);
+  const { demandType } = useSelector((state) => state.solution);
+
+
   // const locationsData = useSelector((state) => state.nodes.nodes);
   const fileId = useSelector((state) => state.file.fileId);
   const solutionData = useSelector((state) => state.solution.solutionData);
@@ -151,6 +155,8 @@ export default function Accords() {
       lng: solutionData.nodeData[0]?.longitude,
     });
     await assignRoute(true);
+
+    await assignDemandType(demandType,solutionData.nodeData);
     // submitNodes(solutionData.nodeData);
   };
 
