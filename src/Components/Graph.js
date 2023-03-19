@@ -20,6 +20,7 @@ const Graph = () => {
       let Xaxis = [];
       let Yaxis = [];
       let Other = [];
+      let Priority = []
       for (const [index, value] of solutionData.solution.entries()) {
 
         console.log("Tour =>", value.tour);
@@ -33,12 +34,14 @@ const Graph = () => {
               "<br><b>Priority: </b>" +
               solutionData.nodeData[ele - 1].priority
           );
+          Priority.push(solutionData.nodeData[ele - 1].priority)
         }
         console.log(solutionData);
 
         Xaxis.push(solutionData.nodeData[0].latitude);
         Yaxis.push(solutionData.nodeData[0].longitude);
         Other.push(solutionData.nodeData[0].demand);
+        Priority.push(solutionData.nodeData[0].priority);
         
         data.push({
           type: "scatter",
@@ -69,7 +72,11 @@ const Graph = () => {
           marker: {
             symbol: "circle",
             size: 10,
-            color: "#0883ff",
+            color: Priority.map((p)=>{
+              return p===2 ?
+              "#0883ff" : p===1 ?
+              "#00cc96" : "#ef553b"
+            }),
             line: {
               width: 1,
               color: "black",
@@ -82,6 +89,7 @@ const Graph = () => {
         Xaxis = [];
         Yaxis = [];
         Other = [];
+        Priority = [];
       }
       data.push({
         type: "scatter",
