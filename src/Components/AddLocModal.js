@@ -45,7 +45,7 @@ const AddLocModal = () => {
     } else {
       name.push(demandName);
       count.push(parseInt(demand));
-      chips.push({ name: demandName, count: parseInt(demand) });
+      chips.push({ items: demandName, quantity: parseInt(demand) });
       setRemaining((prev) => prev - demand);
     }
   };
@@ -54,9 +54,9 @@ const AddLocModal = () => {
 
   const handleRemove = (item) => {
     console.log(item);
-    let tempChips = chips.filter((x) => x.name !== item.name);
-    let tempName = name.filter((x) => x !== item.name);
-    let i = name.indexOf(item.name);
+    let tempChips = chips.filter((x) => x.items !== item.items);
+    let tempName = name.filter((x) => x !== item.items);
+    let i = name.indexOf(item.items);
     console.log("to remove =>", i);
     let removed = count.splice(i, 1);
 
@@ -70,14 +70,14 @@ const AddLocModal = () => {
   const start = () => {
     const ChipsFromStore = demandTypes?.filter((x) => x.node === index + 1);
     if (ChipsFromStore.length === 1) {
-      const result = ChipsFromStore[0].name.map((name, index) => ({
-        name: name,
-        count: parseInt(ChipsFromStore[0].count[index]),
+      const result = ChipsFromStore[0].items.map((name, index) => ({
+        items: name,
+        quantity: parseInt(ChipsFromStore[0].quantity[index]),
       }));
       setChips(result);
-      setName(ChipsFromStore[0]?.name);
-      setCount(ChipsFromStore[0]?.count.map(Number));
-      const sum = ChipsFromStore[0]?.count.reduce(
+      setName(ChipsFromStore[0]?.items);
+      setCount(ChipsFromStore[0]?.quantity.map(Number));
+      const sum = ChipsFromStore[0]?.quantity.reduce(
         (acc, curr) => parseInt(acc) + parseInt(curr),
         0
       );
@@ -113,7 +113,7 @@ const AddLocModal = () => {
 
     console.log("Name=>", name, "Count=>", count);
 
-    await addChip({ node: index + 1, name: name, count: count });
+    await addChip({ node: index + 1, items: name, quantity: count });
     handleClose();
   };
 
@@ -145,7 +145,7 @@ const AddLocModal = () => {
                   <Chip
                     style={{ margin: "5px" }}
                     key={index}
-                    label={item.name + " : " + item.count}
+                    label={item.items + " : " + item.quantity}
                     color="primary"
                     clickable={true}
                     onDelete={() => handleRemove(item)}

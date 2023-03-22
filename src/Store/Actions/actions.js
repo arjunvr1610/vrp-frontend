@@ -7,8 +7,9 @@ let URL_ = window.location.origin.replace(
   "$13000$3"
 );
 if (window.location.hostname === "localhost") {
-  URL_ = "http://localhost:8080"
-  // URL_ = "http://ip172-18-0-119-cg67fvie69v000ds4rh0-3000.direct.labs.play-with-docker.com";
+  // URL_ = "http://localhost:8080"
+  URL_ =
+    "http://ip172-18-0-95-cgdk1jgsf2q000bggse0-3000.direct.labs.play-with-docker.com";
 }
 URL_ = URL_ + "/graphql";
 
@@ -143,22 +144,21 @@ export const saveSolution = (solutionData) => {
   };
 };
 
-
 export const readyView = (arg) => {
   return (dispatch) => {
     dispatch({
       type: "READY_VIEW",
       graphReady: arg,
     });
-  }
-}
+  };
+};
 
 let intervalID;
 export const fetchSolution = (id) => {
   return async (dispatch) => {
     try {
       console.log("chalra", id);
-      let startTime = Date.now()
+      let startTime = Date.now();
       // until backend gives sol we req, so 3 sec delay for low oopsie
       const request = async () => {
         const res = await axios({
@@ -259,15 +259,18 @@ export const fetchSolution = (id) => {
           },
         });
         const result = res.data.data.problemInfo;
-        let totalDistance =
-          result.solution.routes
-            ?.map((t) => t.tourDistance)
-            ?.reduce((acc, l) => acc + l, 0);
+        let totalDistance = result.solution.routes
+          ?.map((t) => t.tourDistance)
+          ?.reduce((acc, l) => acc + l, 0);
         const sum =
           result.solution.routes
             ?.map((t) => t.tour.length - 1)
             ?.reduce((acc, l) => acc + l, 0) + 1;
-        if (sum === result.dimension || Date.now() - startTime > Math.ceil(result.dimension/1000)*60*1000) {
+        if (
+          sum === result.dimension ||
+          Date.now() - startTime >
+            Math.ceil(result.dimension / 1000) * 60 * 1000
+        ) {
           clearTimeout(intervalID);
           dispatch({
             type: "FETCH_UPDATED_SOL",
@@ -288,14 +291,66 @@ export const fetchSolution = (id) => {
   };
 };
 
-export const assignDemandType = (demandType,originalSolution) => {
+export const assignDemandType = (id,demandType, originalSolution) => {
   return async (dispatch) => {
-    console.log('/actions/assignDemandType')
-    console.log("ASSIGN DEMAND TYPE ACTION =>",demandType)
+    try {
+      for (let i = 1; i < originalSolution.length; i++) {
+        let nodeExists = false;
+        for (let j = 0; j < demandType.length; j++) {
+          if (originalSolution[i].node === demandType[j].node) {
+            nodeExists = true;
+            break;
+          }
+        }
+        if (!nodeExists) {
+          demandType.push({
+            node: originalSolution[i].node,
+            items: ["Others"],
+            quantity: [originalSolution[i].demand],
+          });
+        }
+      }
 
-  }
-}
+      console.log("Demandssss= >",demandType)
 
+      const mutationInput = {
+        id: id,
+        input: {
+          demandType: demandType
+        },
+      };
+
+const res = await axios({
+  url: URL_,
+  method: "post",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  data: {
+    query: `
+      mutation UpdateProblemInfo($id: ID!, $input: ProblemInfoInput! ){
+        updateProblemInfo(id: $id, input: $input){
+          ok
+        }
+      }
+    `,
+    variables: mutationInput,
+  },
+});
+      console.log(res);
+
+      if (res.data.errors) {
+        console.log(res.data.errors);
+      }
+      dispatch({
+        type: "ASSIGN_DEMAND",
+      });
+    } catch (err) {
+      console.log(err);
+      throw new Error(err.message);
+    }
+  };
+};
 
 export const deleteSolution = (solutionId) => {
   return async (dispatch) => {
@@ -332,11 +387,11 @@ export const deleteSolution = (solutionId) => {
 };
 
 // modal actions
-export const openAddLocModal = (index,loc) => {
+export const openAddLocModal = (index, loc) => {
   return (dispatch) => {
     dispatch({
       type: "OPEN_ADD_LOC",
-      payload: {index:index,loc:loc},
+      payload: { index: index, loc: loc },
     });
   };
 };
@@ -353,11 +408,11 @@ export const closeAddLocModal = () => {
 export const addChip = (chip) => {
   return (dispatch) => {
     dispatch({
-      type:"ADD_CHIP",
-      payload:chip
-    })
-  }
-}
+      type: "ADD_CHIP",
+      payload: chip,
+    });
+  };
+};
 
 export const openRemoveLocModal = () => {
   return (dispatch) => {

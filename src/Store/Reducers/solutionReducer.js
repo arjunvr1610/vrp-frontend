@@ -45,6 +45,7 @@ const reducer = (state = initialState, action) => {
     const updatedDemand = state.demandType.filter(
       (x) => x.node !== action.payload.node
     );
+
     return {
       ...state,
       demandType: updatedDemand.concat(action.payload),

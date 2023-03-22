@@ -155,9 +155,13 @@ export default function Accords() {
     });
     await assignRoute(true);
 
-    await assignDemandType(demandType,solutionData.nodeData);
+    
     // submitNodes(solutionData.nodeData);
   };
+
+  const onDemandAdd = async() => {
+    await assignDemandType(fileId,demandType, solutionData.nodeData);
+  }
 
   // const colors = [
   //   "#FFDAB9",
@@ -259,7 +263,7 @@ export default function Accords() {
                     <ListItemButton
                       alignItems="flex-start"
                       divider={true}
-                      onClick={() => openAddLocModal(index,loc.demand)}
+                      onClick={() => openAddLocModal(index, loc.demand)}
                       key={index}
                     >
                       <ListItemText
@@ -273,15 +277,27 @@ export default function Accords() {
             </Card>
           )}
           {solutionData?.nodeData ? (
-            <Button
-              style={{ margin: "20px" }}
-              variant="contained"
-              onClick={() => {
-                onSubmitNodes();
-              }}
-            >
-              Find Route
-            </Button>
+            <div>
+              <Button
+                style={{ margin: "20px" }}
+                variant="contained"
+                onClick={() => {
+                  onSubmitNodes();
+                }}
+              >
+                Find Route
+              </Button>
+              <Button
+                style={{ margin: "20px" }}
+                variant="contained"
+                disabled={demandType?.length === 0}
+                onClick={() => {
+                  onDemandAdd();
+                }}
+              >
+                Update Demand
+              </Button>
+            </div>
           ) : (
             <span
               style={{
