@@ -4,6 +4,7 @@ const initialState = {
   routeAssigned: false,
   graphReady: false,
   demandType: [],
+  solId: null
 };
 
 const reducer = (state = initialState, action) => {
@@ -50,6 +51,15 @@ const reducer = (state = initialState, action) => {
       ...state,
       demandType: updatedDemand.concat(action.payload),
     };
+  } else if (action.type === "SELECT_SAVED_SOL") {
+    return {
+      ...state,
+      solutionData: action.payload.solData,
+      demandType: action.payload.demandType,
+      routeSolutionStatus: true,
+      graphReady: action.payload.graphReady,
+      solId: action.payload.id
+    }
   } else {
     return state;
   }

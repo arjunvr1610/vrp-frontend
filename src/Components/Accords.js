@@ -40,18 +40,21 @@ export default function Accords() {
     fetchSolution,
     assignRoute,
     readyView,
-    assignDemandType
+    assignDemandType,
+    selectSavedSol
   } = bindActionCreators(actionCreators, dispatch);
 
   const { mapRoutes } = useSelector((state) => state.routes);
   const { routeSolutionStatus } = useSelector((state) => state.solution);
   const { routeAssigned } = useSelector((state) => state.solution);
   const { demandType } = useSelector((state) => state.solution);
+  const { savedSolutionsData} = useSelector((state) => state.savedSolutions);
 
 
   // const locationsData = useSelector((state) => state.nodes.nodes);
   const fileId = useSelector((state) => state.file.fileId);
   const solutionData = useSelector((state) => state.solution.solutionData);
+  const solution = useSelector((state) => state.solution);
 
   console.log("Solution Frontend =>", solutionData);
   console.log("FILE ID => ", fileId);
@@ -160,7 +163,8 @@ export default function Accords() {
   };
 
   const onDemandAdd = async() => {
-    await assignDemandType(fileId,demandType, solutionData.nodeData);
+    const id = fileId===null ? solution.solId : fileId;
+    await assignDemandType(id,demandType, solutionData.nodeData);
   }
 
   // const colors = [
@@ -337,7 +341,7 @@ export default function Accords() {
                   bgcolor: "background.paper",
                 }}
               >
-                {mapRoutes.map((route, index) => (
+                {mapRoutes?.length !== 0 ? mapRoutes.map((route, index) => (
                   <ListMaterial
                     Tour={index}
                     vehicle={"1298"}
@@ -346,14 +350,13 @@ export default function Accords() {
                     color={route.clr}
                     key={index}
                   />
-                ))}
+                )):"No Routes Assigned"}
               </List>
             </CardContent>
           </Card>
         </AccordionDetails>
       </Accordion>
       <Accordion
-        disabled
         expanded={expanded === "panel4"}
         onChange={handleChange("panel4")}
       >
@@ -363,7 +366,7 @@ export default function Accords() {
           id="panel4bh-header"
         >
           <Typography sx={{ width: "33%", flexShrink: 0 }}>
-            Saved Plans
+            Saved Routes
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -375,7 +378,22 @@ export default function Accords() {
                   maxWidth: 360,
                   bgcolor: "background.paper",
                 }}
-              ></List>
+              >
+                {savedSolutionsData?.length !== 0 ? 
+                  savedSolutionsData?.map((sol) => (
+                    <ListItemButton
+                      alignItems="flex-start"
+                      divider={true}
+                      onClick={() => selectSavedSol(sol)}
+                      key={sol?.id}
+                    >
+                      <ListItemText
+                        primary={`# ${sol?.name} `}
+                        // secondary={`Lat: ${loc.latitude} Long: ${loc.longitude} Demand: ${loc.demand} `}
+                      />
+                    </ListItemButton>
+                  )): "Upload a problem file"}
+              </List>
             </CardContent>
           </Card>
         </AccordionDetails>

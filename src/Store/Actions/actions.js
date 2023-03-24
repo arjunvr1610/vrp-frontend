@@ -9,7 +9,7 @@ let URL_ = window.location.origin.replace(
 if (window.location.hostname === "localhost") {
   // URL_ = "http://localhost:8080"
   URL_ =
-    "http://ip172-18-0-95-cgdk1jgsf2q000bggse0-3000.direct.labs.play-with-docker.com";
+    "http://ip172-18-0-123-cgf01josf2q000b80a6g-3000.direct.labs.play-with-docker.com";
 }
 URL_ = URL_ + "/graphql";
 
@@ -382,6 +382,113 @@ export const deleteSolution = (solutionId) => {
     dispatch({
       type: "DELETE_SOL",
       payload: solutionId,
+    });
+  };
+};
+
+export const fetchSavedSolutions = () => {
+  return async (dispatch) => {
+    const data = await axios({
+      url: URL_,
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: {
+        query: `
+              query problemInfos {
+                problemInfos {
+                  id
+                  name
+                }
+              }
+            `
+      },
+    });
+    console.log("saved sols ---> ", data);
+    
+    dispatch({
+      type: "FETCH_SAVED_SOLS",
+      payload: data?.data?.data?.problemInfos,
+    });
+  };
+};
+
+export const selectSavedSol = (sol) => {
+  return async (dispatch) => {
+    const res = await axios({
+      url: URL_,
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: {
+        query: `
+              query problemInfo($id: ID!) {
+                problemInfo(id: $id) {
+                  id
+                  name
+                  dimension
+                  vehicles
+                  optimalValue
+                  capacity
+                  depotNode
+                  demandType {
+                    node
+                    items
+                    quantity
+                  }
+                  nodeData {
+                    node
+                    latitude
+                    longitude
+                    demand
+                    priority
+                  }
+                  solution {
+                    routes {
+                      tour
+                      tourDistance
+                    }
+                    totalDistance
+                  }
+                }
+              }
+            `,
+        variables: {
+          id: sol.id,
+        },
+      },
+    });
+    const result = res.data.data.problemInfo;
+    let totalDemand = 0;
+    let totalDistance = 0;
+    for (const item of result.nodeData) {
+      totalDemand = totalDemand + item.demand;
+    }
+    const solution = result.solution.routes;
+    for (const item of solution) {
+      totalDistance = totalDistance + item.tourDistance;
+    }
+
+    const payload = {
+      solData: {
+        solution,
+        depotNode: result.depotNode,
+        nodeData: result.nodeData,
+        vehicles: result.vehicles,
+        capacity: result.capacity,
+        locations: result.dimension,
+        totalDemand,
+        totalDistance
+      },
+      id: result.id,
+      demandType: result.demandType, 
+      graphReady: true,
+    };
+    dispatch({
+      type: "SELECT_SAVED_SOL",
+      payload
     });
   };
 };

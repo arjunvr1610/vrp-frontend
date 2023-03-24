@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
@@ -8,19 +8,26 @@ import Accords from "../Components/Accords.js";
 import TrackingBar from "../Components/TrackingBar";
 import AddLocModal from "../Components/AddLocModal";
 import RemoveLocModal from "../Components/RemoveLocModal";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Switch from "@mui/material/Switch";
 import Graph from "../Components/Graph";
 import Lottie from "lottie-react";
 
 import mapLoader from "../animations/map-load.json";
-
+import { bindActionCreators } from "redux";
+import actionCreators from "../Store";
 
 const Home = () => {
-  const { routeSolutionStatus } = useSelector((state) => state.solution);
+  const { routeSolutionStatus, solutionData } = useSelector((state) => state.solution);
   let graphReady = useSelector((state) => state.solution.graphReady);
 
   const [isMapView, setisMapView] = useState(false);
+  const dispatch = useDispatch();
+  const {fetchSavedSolutions} = bindActionCreators(actionCreators, dispatch);
+
+  useEffect(() => {
+    fetchSavedSolutions();
+  }, [solutionData])
   return (
     <Box component="main" sx={{ height: "100vh", flexGrow: 1, p: 3 }}>
       <AddLocModal />
