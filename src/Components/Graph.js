@@ -8,10 +8,13 @@ const Graph = () => {
   const [isReady, setReady] = useState(false);
 
   const solutionData = useSelector((state) => state?.solution?.solutionData);
+  const demandTypes = useSelector((state) => state?.solution?.demandType);
+  console.log("Demand types --->",demandTypes)
+  console.log("Nodes data --->",solutionData.nodeData)
 
   useEffect(() => {
     createGraph();
-  }, []);
+  }, [demandTypes]);
 
   const createGraph = () => {
     if (solutionData != null) {
@@ -27,12 +30,23 @@ const Graph = () => {
         for (const ele of value.tour) {
           Xaxis.push(solutionData.nodeData[ele - 1].latitude);
           Yaxis.push(solutionData.nodeData[ele - 1].longitude);
+          let Items = {};
+          for (const info of demandTypes){
+            if (info.node === ele) {
+              Items = info.items.reduce((obj, key, index) => {
+                obj[key] = info.quantity[index];
+                return obj;
+              }, {});
+            }
+          }
           Other.push(
             solutionData.nodeData[ele - 1].demand +
               "<br><b>Node: </b>" +
               solutionData.nodeData[ele - 1].node +
               "<br><b>Priority: </b>" +
-              solutionData.nodeData[ele - 1].priority
+              solutionData.nodeData[ele - 1].priority +
+              "<br><b>Items: </b>" +
+              JSON.stringify(Items)
           );
           Priority.push(solutionData.nodeData[ele - 1].priority)
         }
