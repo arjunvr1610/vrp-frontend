@@ -9,7 +9,7 @@ let URL_ = window.location.origin.replace(
 if (window.location.hostname === "localhost") {
   // URL_ = "http://localhost:8080"
   URL_ =
-    "http://ip172-18-0-123-cgf01josf2q000b80a6g-3000.direct.labs.play-with-docker.com";
+    "http://ip172-18-0-59-cgi684osf2q00099f87g-3000.direct.labs.play-with-docker.com";
 }
 URL_ = URL_ + "/graphql";
 
@@ -362,14 +362,10 @@ export const deleteSolution = (solutionId) => {
       },
       data: {
         query: `
-            mutation {
-              deleteProblemInfo(id:${solutionId}}){
-                id
-                name
-                vehicles
-                depotNode
-                nodeData
-                solution
+            mutation deleteProblemInfo($id: ID!){
+              deleteProblemInfo(id: $id) {
+                n
+                ok
               }
             }
           `,
@@ -378,9 +374,8 @@ export const deleteSolution = (solutionId) => {
         },
       },
     });
-    console.log(data);
     dispatch({
-      type: "DELETE_SOL",
+      type: "DELETE_SAVED_SOL",
       payload: solutionId,
     });
   };

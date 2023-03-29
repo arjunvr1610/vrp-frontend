@@ -11,16 +11,13 @@ import ListMaterial from "./ListMaterial";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
-import AddLocationIcon from "@mui/icons-material/AddLocation";
-import WrongLocationIcon from "@mui/icons-material/WrongLocation";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
+import DeleteIcon from '@mui/icons-material/Delete';
 import Stack from "@mui/material/Stack";
 import { useDispatch, useSelector } from "react-redux";
 import { bindActionCreators } from "redux";
 import actionCreators from "../Store/index";
-import locs from "../Output/locs";
-import result from "../Output/result";
 import CircularProgress from "@mui/material/CircularProgress";
 import { generateColor, darken } from '../utils/color';
 
@@ -33,22 +30,21 @@ export default function Accords() {
     uploadFile,
     storeNodes,
     openAddLocModal,
-    openRemoveLocModal,
-    submitNodes,
     storeRoutes,
     emptyRoutes,
     fetchSolution,
     assignRoute,
     readyView,
     assignDemandType,
-    selectSavedSol
+    selectSavedSol,
+    deleteSolution
   } = bindActionCreators(actionCreators, dispatch);
 
   const { mapRoutes } = useSelector((state) => state.routes);
   const { routeSolutionStatus } = useSelector((state) => state.solution);
-  const { routeAssigned } = useSelector((state) => state.solution);
+  // const { routeAssigned } = useSelector((state) => state.solution);
   const { demandType } = useSelector((state) => state.solution);
-  const { savedSolutionsData} = useSelector((state) => state.savedSolutions);
+  const { savedSolutionsData } = useSelector((state) => state.savedSolutions);
 
 
   // const locationsData = useSelector((state) => state.nodes.nodes);
@@ -138,7 +134,7 @@ export default function Accords() {
               storeRoutes({
                 index: index,
                 dir: result,
-                clr: darken(generateColor(index+1)),
+                clr: darken(generateColor(index + 1)),
                 tourDistance: solutionData.solution[index].tourDistance,
               });
             } else {
@@ -158,13 +154,13 @@ export default function Accords() {
     });
     await assignRoute(true);
 
-    
+
     // submitNodes(solutionData.nodeData);
   };
 
-  const onDemandAdd = async() => {
-    const id = fileId===null ? solution.solId : fileId;
-    await assignDemandType(id,demandType, solutionData.nodeData);
+  const onDemandAdd = async () => {
+    const id = fileId === null ? solution.solId : fileId;
+    await assignDemandType(id, demandType, solutionData.nodeData);
   }
 
   // const colors = [
@@ -277,6 +273,7 @@ export default function Accords() {
                     </ListItemButton>
                   ))}
                 </List>
+
               </CardContent>
             </Card>
           )}
@@ -350,7 +347,7 @@ export default function Accords() {
                     color={route.clr}
                     key={index}
                   />
-                )):"No Routes Assigned"}
+                )) : "No Routes Assigned"}
               </List>
             </CardContent>
           </Card>
@@ -379,8 +376,9 @@ export default function Accords() {
                   bgcolor: "background.paper",
                 }}
               >
-                {savedSolutionsData?.length !== 0 ? 
+                {savedSolutionsData?.length !== 0 ?
                   savedSolutionsData?.map((sol) => (
+                    <div style={{flex: 1, flexDirection: "row", display:"flex"}}>
                     <ListItemButton
                       alignItems="flex-start"
                       divider={true}
@@ -389,10 +387,18 @@ export default function Accords() {
                     >
                       <ListItemText
                         primary={`# ${sol?.name} `}
-                        // secondary={`Lat: ${loc.latitude} Long: ${loc.longitude} Demand: ${loc.demand} `}
+                      // secondary={`Lat: ${loc.latitude} Long: ${loc.longitude} Demand: ${loc.demand} `}
                       />
+                      
                     </ListItemButton>
-                  )): "Upload a problem file"}
+                    <IconButton aria-label="delete">
+                        <DeleteIcon onClick={()=>{
+                          console.log("delete clicked")
+                          deleteSolution(sol?.id)
+                        }}/>
+                    </IconButton>
+                    </div>
+                  )) : "Upload a problem file"}
               </List>
             </CardContent>
           </Card>

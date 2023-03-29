@@ -8,6 +8,17 @@ const reducer = (state = initialState, action) => {
             ...state,
             savedSolutionsData: action.payload
         }
+    } else if (action.type === 'DELETE_SAVED_SOL') {
+        const new_saved_sols = []
+        state.savedSolutionsData.map(sol => {
+            if(sol.id !== action.payload) {
+                new_saved_sols.push(sol)
+            }
+        });
+        return {
+            ...state,
+            savedSolutionsData: new_saved_sols
+        }
     } else {
         return state;
     }
