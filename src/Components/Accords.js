@@ -21,7 +21,7 @@ import actionCreators from "../Store/index";
 import CircularProgress from "@mui/material/CircularProgress";
 import { generateColor, darken } from '../utils/color';
 
-export default function Accords() {
+export default function Accords({ fileProp, submitButton }) {
   const [expanded, setExpanded] = useState(false);
   const [file, setFile] = useState(null);
   const [loader, setLoader] = useState(false);
@@ -37,7 +37,7 @@ export default function Accords() {
     readyView,
     assignDemandType,
     selectSavedSol,
-    deleteSolution
+    deleteSolution,
   } = bindActionCreators(actionCreators, dispatch);
 
   const { mapRoutes } = useSelector((state) => state.routes);
@@ -45,7 +45,6 @@ export default function Accords() {
   // const { routeAssigned } = useSelector((state) => state.solution);
   const { demandType } = useSelector((state) => state.solution);
   const { savedSolutionsData } = useSelector((state) => state.savedSolutions);
-
 
   // const locationsData = useSelector((state) => state.nodes.nodes);
   const fileId = useSelector((state) => state.file.fileId);
@@ -61,6 +60,11 @@ export default function Accords() {
 
   const onInputChange = (e) => {
     setFile(e.target.files[0]);
+  };
+
+  const pannel1Function = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+    submitButton();
   };
 
   const onSubmitFile = async (e) => {
@@ -154,14 +158,13 @@ export default function Accords() {
     });
     await assignRoute(true);
 
-
     // submitNodes(solutionData.nodeData);
   };
 
   const onDemandAdd = async () => {
     const id = fileId === null ? solution.solId : fileId;
     await assignDemandType(id, demandType, solutionData.nodeData);
-  }
+  };
 
   // const colors = [
   //   "#FFDAB9",
@@ -189,10 +192,13 @@ export default function Accords() {
   return (
     <div>
       <Accordion
-        expanded={expanded === "panel1"}
-        onChange={handleChange("panel1")}
+        expanded={expanded === "panel1" || fileProp}
+        onChange={
+          pannel1Function("panel1")
+        }
       >
         <AccordionSummary
+      
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1bh-content"
           id="panel1bh-header"
@@ -237,7 +243,6 @@ export default function Accords() {
       <Accordion
         expanded={expanded === "panel2"}
         onChange={handleChange("panel2")}
-        disabled={!routeSolutionStatus} // change it to !routeSolutionStatus
       >
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
@@ -273,7 +278,6 @@ export default function Accords() {
                     </ListItemButton>
                   ))}
                 </List>
-
               </CardContent>
             </Card>
           )}
@@ -338,16 +342,18 @@ export default function Accords() {
                   bgcolor: "background.paper",
                 }}
               >
-                {mapRoutes?.length !== 0 ? mapRoutes.map((route, index) => (
-                  <ListMaterial
-                    Tour={index}
-                    vehicle={"1298"}
-                    distance={route.tourDistance}
-                    cost={"98"}
-                    color={route.clr}
-                    key={index}
-                  />
-                )) : "No Routes Assigned"}
+                {mapRoutes?.length !== 0
+                  ? mapRoutes.map((route, index) => (
+                      <ListMaterial
+                        Tour={index}
+                        vehicle={"1298"}
+                        distance={route.tourDistance}
+                        cost={"98"}
+                        color={route.clr}
+                        key={index}
+                      />
+                    ))
+                  : "No Routes Assigned"}
               </List>
             </CardContent>
           </Card>
@@ -376,29 +382,37 @@ export default function Accords() {
                   bgcolor: "background.paper",
                 }}
               >
-                {savedSolutionsData?.length !== 0 ?
-                  savedSolutionsData?.map((sol) => (
-                    <div style={{flex: 1, flexDirection: "row", display:"flex"}}>
-                    <ListItemButton
-                      alignItems="flex-start"
-                      divider={true}
-                      onClick={() => selectSavedSol(sol)}
-                      key={sol?.id}
-                    >
-                      <ListItemText
-                        primary={`# ${sol?.name} `}
-                      // secondary={`Lat: ${loc.latitude} Long: ${loc.longitude} Demand: ${loc.demand} `}
-                      />
-                      
-                    </ListItemButton>
-                    <IconButton aria-label="delete">
-                        <DeleteIcon onClick={()=>{
-                          console.log("delete clicked")
-                          deleteSolution(sol?.id)
-                        }}/>
-                    </IconButton>
-                    </div>
-                  )) : "Upload a problem file"}
+                {savedSolutionsData?.length !== 0
+                  ? savedSolutionsData?.map((sol) => (
+                      <div
+                        style={{
+                          flex: 1,
+                          flexDirection: "row",
+                          display: "flex",
+                        }}
+                      >
+                        <ListItemButton
+                          alignItems="flex-start"
+                          divider={true}
+                          onClick={() => selectSavedSol(sol)}
+                          key={sol?.id}
+                        >
+                          <ListItemText
+                            primary={`# ${sol?.name} `}
+                            // secondary={`Lat: ${loc.latitude} Long: ${loc.longitude} Demand: ${loc.demand} `}
+                          />
+                        </ListItemButton>
+                        <IconButton aria-label="delete">
+                          <DeleteIcon
+                            onClick={() => {
+                              console.log("delete clicked");
+                              deleteSolution(sol?.id);
+                            }}
+                          />
+                        </IconButton>
+                      </div>
+                    ))
+                  : "Upload a problem file"}
               </List>
             </CardContent>
           </Card>

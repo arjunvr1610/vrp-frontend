@@ -9,7 +9,7 @@ let URL_ = window.location.origin.replace(
 if (window.location.hostname === "localhost") {
   // URL_ = "http://localhost:8080"
   URL_ =
-    "http://ip172-18-0-59-cgi684osf2q00099f87g-3000.direct.labs.play-with-docker.com";
+    "http://ip172-18-0-36-cgi8peo1k7jg00915970-3000.direct.labs.play-with-docker.com";
 }
 URL_ = URL_ + "/graphql";
 
@@ -411,6 +411,7 @@ export const fetchSavedSolutions = () => {
 
 export const selectSavedSol = (sol) => {
   return async (dispatch) => {
+
     const res = await axios({
       url: URL_,
       method: "post",
@@ -481,6 +482,8 @@ export const selectSavedSol = (sol) => {
       demandType: result.demandType, 
       graphReady: true,
     };
+
+    console.log("action demand type=>",result.demandType);
     dispatch({
       type: "SELECT_SAVED_SOL",
       payload
