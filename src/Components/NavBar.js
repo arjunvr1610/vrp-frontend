@@ -6,25 +6,35 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
+import Lottie from 'lottie-react';
+import logo from '../animations/logo.json'
 
 const NavBar = () => {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed" sx={{ bgcolor: "#4484c4" }}>
-        <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 0 }}
+        <Toolbar
+          style={{
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "row",
+          }}
+        >
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ flexGrow: 1 }} // adjust marginLeft
           >
-            {/* <MenuIcon /> */}
-          </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Vehicle Route Planning 
+            Vehicle Route Planning
           </Typography>
-          {/* <Button color="inherit">Login</Button> */}
+          <Lottie
+            animationData={logo}
+            style={{ width: "150px", cursor: "pointer" }}
+            loop={false}
+            onClick={() => {
+              window.location.reload();
+            }}
+          />
         </Toolbar>
       </AppBar>
     </Box>

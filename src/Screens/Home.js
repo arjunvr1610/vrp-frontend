@@ -12,12 +12,15 @@ import { useSelector, useDispatch } from "react-redux";
 import Switch from "@mui/material/Switch";
 import Graph from "../Components/Graph";
 import Lottie from "lottie-react";
-import "./Home.css"
+import "./Home.css";
 
 import mapLoader from "../animations/map-load.json";
-import upload from "../animations/upload.json"
+import upload from "../animations/truck.json";
 import { bindActionCreators } from "redux";
 import actionCreators from "../Store";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 const Home = () => {
   const { routeSolutionStatus, solutionData } = useSelector(
@@ -25,11 +28,29 @@ const Home = () => {
   );
   let graphReady = useSelector((state) => state.solution.graphReady);
 
-  const [submit,setSubmit] = useState("");
+  const [submit, setSubmit] = useState("");
 
   const submitButton = () => {
-    setSubmit("")
-  }
+    setSubmit("");
+  };
+
+  const onToast = (message, isSuccess) => {
+    console.log("burh");
+
+    if (isSuccess) {
+      toast.success(message, {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: true,
+      });
+    } else {
+      toast.error(message, {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: true,
+      });
+    }
+  };
 
   const [isMapView, setisMapView] = useState(false);
   const dispatch = useDispatch();
@@ -46,6 +67,8 @@ const Home = () => {
         height: "100vh",
         flexGrow: 1,
         p: 3,
+        fontFamily: "Manrope",
+        fontWeight: 300,
       }}
     >
       <Switch
@@ -59,14 +82,18 @@ const Home = () => {
       <div
         style={{ marginTop: 35, boxShadow: "0px 0px 7px rgba(0, 0, 0, 0.2)" }}
       >
-        <AddLocModal />
+        <AddLocModal onToast={onToast} />
         <RemoveLocModal />
         <Grid container spacing={0}>
           <Grid item xs={12}>
             <TrackingBar />
           </Grid>
           <Grid item xs={12} sm={3}>
-            <Accords fileProp={submit} submitButton={submitButton} />
+            <Accords
+              fileProp={submit}
+              submitButton={submitButton}
+              onToast={onToast}
+            />
           </Grid>
           <Grid item xs={12} sm={9}>
             {!isMapView ? (
@@ -91,9 +118,9 @@ const Home = () => {
                           display: "flex",
                           margin: 0,
                           padding: 0,
-                          width: "100%",
-                          height: "500px",
                           overflow: "hidden",
+                          width: "100%",
+                          height: "400px",
                         }}
                       >
                         <Lottie animationData={mapLoader} loop={true}></Lottie>
@@ -105,15 +132,15 @@ const Home = () => {
                           margin: 0,
                           padding: 0,
                           width: "100%",
-                          height: "100px",
+                          height: "120px",
                           overflow: "hidden",
                         }}
+                        className="upload_lottie"
                       >
                         <Lottie
                           onClick={() => setSubmit("panel1")}
                           animationData={upload}
                           loop={true}
-                          className="upload_lottie"
                         ></Lottie>
                       </div>
                     )}

@@ -1,23 +1,23 @@
 import { React, useEffect, useState } from "react";
-import Button from "@mui/material/Button";
+
+import IconButton from "@mui/material/IconButton";
+import AddIcon from "@mui/icons-material/Add";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
+
 import DialogTitle from "@mui/material/DialogTitle";
 import { useDispatch, useSelector } from "react-redux";
 import { bindActionCreators } from "redux";
 import actionCreators from "../Store/index";
 import Chip from "@mui/material/Chip";
-import Stack from "@mui/material/Stack";
 import { Grid } from "@mui/material";
 
-const AddLocModal = () => {
-  //   { pos: arr[j], label: label.toString() }
+const AddLocModal = ({ onToast }) => {
+
   const loc = useSelector((state) => state.modals.loc);
-  const [lng, setLng] = useState(null);
-  const [ltd, setLtd] = useState(null);
+
   const [demand, setDemand] = useState(0);
   const [remaining, setRemaining] = useState(0);
 
@@ -41,7 +41,7 @@ const AddLocModal = () => {
       demandName?.trim().length === 0 ||
       name.includes(demandName)
     ) {
-      window.alert("Invalid Input");
+      onToast("Invalid Input", false);
     } else {
       name.push(demandName);
       count.push(parseInt(demand));
@@ -118,75 +118,78 @@ const AddLocModal = () => {
   };
 
   return (
-    <div>
-      <Dialog open={open} onClose={handleClose} fullWidth={true}>
+    <Dialog
+      open={open}
+      onClose={onSubmit}
+      fullWidth={true}
+      PaperProps={{ style: { padding: "10px" } }}
+    >
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <DialogTitle>Site {index + 1}</DialogTitle>
+        <DialogTitle>Stock : {remaining}</DialogTitle>
+      </div>
+
+      {chips.length !== 0 ? (
         <div
           style={{
+            paddingLeft: "1rem",
             display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
+            flexDirection: "column",
           }}
         >
-          <DialogTitle>Node {index + 1}</DialogTitle>
-          <DialogTitle>Unused : {remaining}</DialogTitle>
+          <Grid direction="row" spacing={1}>
+            {chips.map((item, index) => {
+              return (
+                <Chip
+                  style={{ margin: "5px" }}
+                  key={index}
+                  label={item.items + " : " + item.quantity}
+                  color="primary"
+                  clickable={true}
+                  onDelete={() => handleRemove(item)}
+                />
+              );
+            })}
+          </Grid>
         </div>
-
-        {chips.length !== 0 ? (
-          <div
-            style={{
-              paddingLeft: "1rem",
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            <Grid direction="row" spacing={1}>
-              {chips.map((item, index) => {
-                return (
-                  <Chip
-                    style={{ margin: "5px" }}
-                    key={index}
-                    label={item.items + " : " + item.quantity}
-                    color="primary"
-                    clickable={true}
-                    onDelete={() => handleRemove(item)}
-                  />
-                );
-              })}
-            </Grid>
-          </div>
-        ) : null}
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            value={demandName}
-            label="Demand Name"
-            fullWidth
-            variant="standard"
-            onChange={(e) => setDemandName(e.target.value)}
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            value={demand}
-            label="Demand"
-            type="number"
-            fullWidth
-            variant="standard"
-            onChange={(e) => setDemand(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button
-            disabled={remaining - demand < 0 || demand === 0}
-            onClick={handleAdd}
-          >
-            Add New
-          </Button>
-          <Button onClick={onSubmit}>Done</Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+      ) : null}
+      <DialogContent>
+        <TextField
+          autoFocus
+          margin="dense"
+          value={demandName}
+          label="Demand Name"
+          fullWidth
+          variant="standard"
+          onChange={(e) => setDemandName(e.target.value)}
+        />
+        <TextField
+          autoFocus
+          margin="dense"
+          value={demand}
+          label="Demand"
+          type="number"
+          fullWidth
+          variant="standard"
+          onChange={(e) => setDemand(e.target.value)}
+        />
+      </DialogContent>
+      <DialogActions>
+        <IconButton
+          color="primary"
+          disabled={remaining - demand < 0 || demand === 0}
+          onClick={handleAdd}
+        >
+          <AddIcon fontSize="large" />
+        </IconButton>
+      </DialogActions>
+    </Dialog>
   );
 };
 

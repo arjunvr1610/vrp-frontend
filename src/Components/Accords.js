@@ -10,7 +10,7 @@ import { Chip, List } from "@mui/material";
 import ListMaterial from "./ListMaterial";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
-import UploadFileIcon from "@mui/icons-material/UploadFile";
+import TableChartOutlinedIcon from "@mui/icons-material/TableChartOutlined";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -19,9 +19,23 @@ import { useDispatch, useSelector } from "react-redux";
 import { bindActionCreators } from "redux";
 import actionCreators from "../Store/index";
 import CircularProgress from "@mui/material/CircularProgress";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { generateColor, darken } from '../utils/color';
 
-export default function Accords({ fileProp, submitButton }) {
+
+import UpdateIcon from "@mui/icons-material/Update";
+import CommuteIcon from "@mui/icons-material/Commute";
+import SendIcon from "@mui/icons-material/Send";
+import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
+import xlsx from "../animations/xlsx.png"
+import { SvgIcon } from '@mui/material';
+
+
+
+
+
+export default function Accords({ fileProp, submitButton,onToast }) {
   const [expanded, setExpanded] = useState(false);
   const [file, setFile] = useState(null);
   const [loader, setLoader] = useState(false);
@@ -82,10 +96,10 @@ export default function Accords({ fileProp, submitButton }) {
         //   findSolution(timeoutId);
         // }, 1000);
       } else {
-        window.alert("Choose A File");
+        onToast("Choose A File",false);
       }
     } catch (err) {
-      window.alert("Something Went Wrong");
+      onToast("Something Went Wrong",false);
     }
     setLoader(false);
   };
@@ -99,9 +113,6 @@ export default function Accords({ fileProp, submitButton }) {
       if (solutionData) {
         await storeNodes(solutionData.nodeData);
       }
-
-      // window.alert("Route created");
-      // await onSubmitNodes();
     }
     setLoader(false);
   };
@@ -143,6 +154,7 @@ export default function Accords({ fileProp, submitButton }) {
               });
             } else {
               console.error(`error fetching directions ${result}`);
+              onToast("Something Went Wrong",false)
             }
           }
         );
@@ -162,43 +174,26 @@ export default function Accords({ fileProp, submitButton }) {
   };
 
   const onDemandAdd = async () => {
-    const id = fileId === null ? solution.solId : fileId;
-    await assignDemandType(id, demandType, solutionData.nodeData);
-  };
+    try{
 
-  // const colors = [
-  //   "#FFDAB9",
-  //   "#F4A460",
-  //   "#FFDEAD",
-  //   "#FFA07A",
-  //   "#FF69B4",
-  //   "#BA55D3",
-  //   "#7B68EE",
-  //   "#6495ED",
-  //   "#00BFFF",
-  //   "#1E90FF",
-  //   "#87CEEB",
-  //   "#32CD32",
-  //   "#90EE90",
-  //   "#00FA9A",
-  //   "#FFD700",
-  //   "#FFFF00",
-  //   "#DAA520",
-  //   "#BDB76B",
-  //   "#808000",
-  //   "#2F4F4F",
-  // ];
+      const id = fileId === null ? solution.solId : fileId;
+      await assignDemandType(id, demandType, solutionData.nodeData);
+      onToast("Demands updated",true);
+    }catch{
+      onToast("Something Went Wrong",false);
+
+    }
+
+  };
 
   return (
     <div>
+      <ToastContainer />
       <Accordion
         expanded={expanded === "panel1" || fileProp}
-        onChange={
-          pannel1Function("panel1")
-        }
+        onChange={pannel1Function("panel1")}
       >
         <AccordionSummary
-      
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1bh-content"
           id="panel1bh-header"
@@ -207,9 +202,27 @@ export default function Accords({ fileProp, submitButton }) {
         </AccordionSummary>
         <AccordionDetails>
           <Stack direction={"column"} alignItems={"center"} spacing={2}>
-            <IconButton aria-label="upload file" component="label">
+            <IconButton
+              sx={{
+                transition: "background-color 0.2s ease-out",
+                "&:hover": {
+                  backgroundColor: "#f2fcf5",
+                },
+                "&:not(:hover)": {
+                  backgroundColor: "initial",
+                },
+              }}
+              style={{
+                padding: "20px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              aria-label="upload file"
+              component="label"
+            >
               <input hidden type="file" onChange={onInputChange} />
-              <UploadFileIcon sx={{ fontSize: 100 }} />
+              <img src={xlsx} alt="Excel Sheet" style={{ width: "70px" }} />
             </IconButton>
             {file !== null ? (
               <Chip label={file?.name} variant="outlined" />
@@ -272,8 +285,20 @@ export default function Accords({ fileProp, submitButton }) {
                       key={index}
                     >
                       <ListItemText
-                        primary={`Node ${loc.node} `}
-                        secondary={`Lat: ${loc.latitude} Long: ${loc.longitude} Demand: ${loc.demand} `}
+                        primary={`Site ${loc.node} `}
+                        secondary={
+                          <>
+                            <Typography component="div">
+                              Latitude: {loc.latitude}
+                            </Typography>
+                            <Typography component="div">
+                              Longitude: {loc.longitude}
+                            </Typography>
+                            <Typography component="div">
+                              Demand: {loc.demand}
+                            </Typography>
+                          </>
+                        }
                       />
                     </ListItemButton>
                   ))}
@@ -289,6 +314,7 @@ export default function Accords({ fileProp, submitButton }) {
                 onClick={() => {
                   onSubmitNodes();
                 }}
+                startIcon={<CommuteIcon />}
               >
                 Find Route
               </Button>
@@ -299,8 +325,9 @@ export default function Accords({ fileProp, submitButton }) {
                 onClick={() => {
                   onDemandAdd();
                 }}
+                startIcon={<UpdateIcon />}
               >
-                Update Demand
+                Revise demand
               </Button>
             </div>
           ) : (
@@ -328,9 +355,7 @@ export default function Accords({ fileProp, submitButton }) {
           aria-controls="panel3bh-content"
           id="panel3bh-header"
         >
-          <Typography sx={{ width: "33%", flexShrink: 0 }}>
-            Assigned Routes
-          </Typography>
+          <Typography sx={{ width: "33%", flexShrink: 0 }}>Tours</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Card style={{ maxHeight: 450, overflow: "auto" }}>
@@ -368,17 +393,14 @@ export default function Accords({ fileProp, submitButton }) {
           aria-controls="panel4bh-content"
           id="panel4bh-header"
         >
-          <Typography sx={{ width: "33%", flexShrink: 0 }}>
-            Saved Routes
-          </Typography>
+          <Typography sx={{ width: "33%", flexShrink: 0 }}>Batch</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Card style={{ maxHeight: 450, overflow: "auto" }}>
+          <Card style={{ overflow: "auto" }}>
             <CardContent>
               <List
                 sx={{
                   width: "100%",
-                  maxWidth: 360,
                   bgcolor: "background.paper",
                 }}
               >
@@ -398,7 +420,7 @@ export default function Accords({ fileProp, submitButton }) {
                           key={sol?.id}
                         >
                           <ListItemText
-                            primary={`# ${sol?.name} `}
+                            primary={`${sol?.name} `}
                             // secondary={`Lat: ${loc.latitude} Long: ${loc.longitude} Demand: ${loc.demand} `}
                           />
                         </ListItemButton>
