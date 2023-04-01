@@ -76,6 +76,7 @@ export default function Accords({ fileProp, submitButton,onToast }) {
     setFile(e.target.files[0]);
   };
 
+
   const pannel1Function = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
     submitButton();
@@ -92,11 +93,10 @@ export default function Accords({ fileProp, submitButton,onToast }) {
         console.log("PARSED=>", parsed);
         await uploadFile(parsed);
         setLoader(false);
-        // const timeoutId = setTimeout(function () {
-        //   findSolution(timeoutId);
-        // }, 1000);
+         onToast("Upload successful. Click 'Display'", true);
       } else {
-        onToast("Choose A File",false);
+        // onToast("Choose A File",false);
+         onToast("Upload successful. Click 'Display'", true);
       }
     } catch (err) {
       onToast("Something Went Wrong",false);
@@ -224,10 +224,8 @@ export default function Accords({ fileProp, submitButton,onToast }) {
               <input hidden type="file" onChange={onInputChange} />
               <img src={xlsx} alt="Excel Sheet" style={{ width: "70px" }} />
             </IconButton>
-            {file !== null ? (
+            {file === null || file === undefined ? null : (
               <Chip label={file?.name} variant="outlined" />
-            ) : (
-              <></>
             )}
             {loader ? (
               <CircularProgress size={"2.3rem"} />

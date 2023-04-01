@@ -9,7 +9,7 @@ let URL_ = window.location.origin.replace(
 if (window.location.hostname === "localhost") {
   // URL_ = "http://localhost:8080"
   URL_ =
-    "http://ip172-18-0-36-cgjism01k7jg00bh8v30-3000.direct.labs.play-with-docker.com";
+    "http://ip172-18-0-42-cgjtjoosf2q000dpeieg-3000.direct.labs.play-with-docker.com";
 }
 URL_ = URL_ + "/graphql";
 

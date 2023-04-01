@@ -7,10 +7,9 @@ import { useSelector } from 'react-redux';
 
 const TrackingBar = () => {
     const locationsData = useSelector((state) => state.solution.solutionData);
-    console.log("FRONT",locationsData)
+    console.log("$$$$$$$$$$$$$$",locationsData)
     return (
-      <Card
-      >
+      <Card>
         <CardContent style={{ overflowX: "auto" }}>
           <Grid container paddingX={2} style={{ minWidth: "40rem" }}>
             <Grid item xs={3} textAlign="center">
@@ -21,9 +20,9 @@ const TrackingBar = () => {
             </Grid>
             <Grid item xs={3} textAlign="center">
               <Typography variant="h4">
-                {locationsData ? locationsData.vehicles : 0}
+                {locationsData ? locationsData.solution.length : null}{locationsData?'/':null}{locationsData ? locationsData.vehicles : 0}
               </Typography>
-              <Typography fontSize={13}>No. Of Vehicles</Typography>
+              <Typography fontSize={13}>Vehicles Used</Typography>
             </Grid>
             <Grid item xs={3} textAlign="center">
               <Typography variant="h4">
