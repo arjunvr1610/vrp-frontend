@@ -95,8 +95,7 @@ export default function Accords({ fileProp, submitButton,onToast }) {
         setLoader(false);
          onToast("Upload successful. Click 'Display'", true);
       } else {
-        // onToast("Choose A File",false);
-         onToast("Upload successful. Click 'Display'", true);
+        onToast("Choose a File",false);
       }
     } catch (err) {
       onToast("Something Went Wrong",false);
